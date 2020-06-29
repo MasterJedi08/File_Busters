@@ -1,0 +1,14 @@
+{
+    "name" : "trial extension",
+    "version" : "1.0",
+    "manifest_version" : 2,
+    "description": "Spam email detector",
+    "content_scripts" : [
+        {
+            "matches" : ["*mail.google.com/*"],
+            "js" : ["content.js"]
+        }
+    ],
+    "permissions": [ "activeTab" ]
+    }
+    
