@@ -27,6 +27,7 @@ def preprocess(data):
     test_images = test_images/255.0
     return (train_images, train_labels, test_images, test_labels)
 
+# train_img = [ham + spam] train_labels = [ham_label + spam_label] << index must match
 def train(train_images, train_labels):
     # try to load already saved model
     try:
