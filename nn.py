@@ -122,4 +122,4 @@ spam_structure = structures_counter(spam_emails)
 # train the data
 train(train_images, train_labels)
 # test model
-evaluate_and_perdict(model, test_images,test_labels)
+predict(model, test_images,test_labels)

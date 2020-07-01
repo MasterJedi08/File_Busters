@@ -9,6 +9,12 @@
             "js" : ["content.js"]
         }
     ],
-    "permissions": [ "activeTab" ]
+    "background": { 
+        "scripts" : ["background.js"]
+    },
+    "permissions": [ "activeTab" ],
+    "browser-action": {
+        "default_icon": "tempGhost.png"
+    }
     }
     
