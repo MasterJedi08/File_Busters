@@ -88,10 +88,29 @@ ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames
 spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
     
     
-testEmail = ham_emails[0]
-testEmailContent = testEmail.get_content()
+#joey
+numTrainHam = round(len(ham_emails)*.7,0)
+numTestHam = len(ham_emails) - numTrainHam
+numTrainSpam = round(len(spam_emails)*.7,0)
+numTestSpam = len(spam_emails) - numTrainHam
 
-print(print(spam_emails[5].get_content()))
+print(numTrainHam,numTestHam,numTrainSpam,numTestSpam)
+testHam = []
+testSpam = []
+trainHam = []
+trainSpam = []
+for i in len(ham_emails):
+    if i < numTrainHam:
+        trainHam.append(ham_emails[i-1])
+    else
+        testHam.append(ham_emails[i-1])
+for i in len(spam_emails):
+    if i < numTrainSpam:
+        trainSpam.append(spam_emails[i-1])
+    else
+        testSpam.append(spam_emails[i-1])
+
+#endJOey
 
 
 from collections import Counter
