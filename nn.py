@@ -16,19 +16,10 @@ from bs4 import BeautifulSoup
 #split into test and train, input (images) and output (labels)
 # CONSTANTS
 NUM_EPOCHS = 5
-FILENAME = "nn_model.h5"
-
-def preprocess(data):
-    # get labels and images for testing and training
-    (train_images, train_labels), (test_images, test_labels) = data.load_data()
-    # normalize data -- don't want super large numbers
-    # normalize data by scaling all grayscale values down by 255.0
-    train_images = train_images/255.0
-    test_images = test_images/255.0
-    return (train_images, train_labels, test_images, test_labels)
+FILENAME = "file_busters_model.h5"
 
 # train_img = [ham + spam] train_labels = [ham_label + spam_label] << index must match
-def train(train_images, train_labels):
+def train(train_emails, train_labels):
     # try to load already saved model
     try:
         # this line will throw error if file doesn't exist
@@ -36,12 +27,10 @@ def train(train_images, train_labels):
     except:
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
-            # convery input from 2D list to 1D list
-            keras.layers.Flatten(input_shape=(28, 28)),
             # 128 neurons, rectified linear unit
-            keras.layers.Dense(activation="relu"), 
-            #  outpu classes, softmax probability dist (softmax = softens max values)
-            keras.layers.Dense(10, activation="softmax")
+            keras.layers.Dense(128, activation="relu"), 
+            # num of output classes, softmax probability dist (softmax = softens max values)
+            keras.layers.Dense(2, activation="softmax")
             ])
 
         #compile model
@@ -49,7 +38,7 @@ def train(train_images, train_labels):
         metrics=["accuracy"])
 
         # fit model
-        model.fit(train_images, train_labels, epochs=NUM_EPOCHS)
+        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
 
         # save model
         model.save(FILENAME)
@@ -86,32 +75,8 @@ def load_email(is_spam, filename):
 # making list to match index values with filenames    
 ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
 spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
-    
-    
-#joey
-numTrainHam = round(len(ham_emails)*.7,0)
-numTestHam = len(ham_emails) - numTrainHam
-numTrainSpam = round(len(spam_emails)*.7,0)
-numTestSpam = len(spam_emails) - numTrainHam
 
-print(numTrainHam,numTestHam,numTrainSpam,numTestSpam)
-testHam = []
-testSpam = []
-trainHam = []
-trainSpam = []
-for i in len(ham_emails):
-    if i < numTrainHam:
-        trainHam.append(ham_emails[i-1])
-    else
-        testHam.append(ham_emails[i-1])
-for i in len(spam_emails):
-    if i < numTrainSpam:
-        trainSpam.append(spam_emails[i-1])
-    else
-        testSpam.append(spam_emails[i-1])
-
-#endJOey
-
+print(type(ham_emails[0]))    
 
 from collections import Counter
 
@@ -137,9 +102,83 @@ def structures_counter(emails):
 ham_structure = structures_counter(ham_emails)
 spam_structure = structures_counter(spam_emails)
 
-# run program
-(train_images, train_labels, test_images, test_labels) = preprocess(data)
+# keep this one??
+def html_to_plain(email):
+    try:
+        soup = BeautifulSoup(email.get_content(), 'html.parser')
+        return soup.text.replace('\n\n','')
+    except:
+        return "empty"
+
+def email_to_plain(email):
+    struct = get_email_structure(email)
+    for part in email.walk():
+        partContentType = part.get_content_type()
+        if partContentType not in ['text/plain','text/html']:
+            continue
+        try:
+            partContent = part.get_content()
+        except: # in case of encoding issues
+            partContent = str(part.get_payload())
+        if partContentType == 'text/plain':
+            return partContent
+        else:
+            return html_to_plain(part)
+
+print(email_to_plain(ham_emails[42]))
+print(email_to_plain(spam_emails[42]))
+    
+#joey
+numTrainHam = round(len(ham_emails)*.7,0)
+numTestHam = len(ham_emails) - numTrainHam
+numTrainSpam = round(len(spam_emails)*.7,0)
+numTestSpam = len(spam_emails) - numTrainHam
+
+# print(numTrainHam,numTestHam,numTrainSpam,numTestSpam)
+testHam = []
+testSpam = []
+trainHam = []
+trainSpam = []
+for i in range(len(ham_emails)):
+    if i < numTrainHam:
+        trainHam.append(ham_emails[i-1])
+    else:
+        testHam.append(ham_emails[i-1])
+for i in range(len(spam_emails)):
+    if i < numTrainSpam:
+        trainSpam.append(spam_emails[i-1])
+    else:
+        testSpam.append(spam_emails[i-1])
+
+#endJOey
+
+#train_emails
+train_emails = []
+train_emails.append(trainHam)
+train_emails.append(trainSpam)
+
+#train_labels 
+train_labels = []
+for x in range(len(trainHam)):
+    train_labels.append("ham")
+
+for x in range(len(trainSpam)):
+    train_labels.append("spam")   
+
+# test_emails
+test_emails = []
+test_emails.append(testHam)
+test_emails.append(testSpam)
+
+#train_labels 
+test_labels = []
+for x in range(len(testHam)):
+    test_labels.append("ham")
+
+for x in range(len(testSpam)):
+    test_labels.append("spam")   
+
 # train the data
-train(train_images, train_labels)
+train(train_emails, train_labels)
 # test model
-predict(model, test_images,test_labels)
+predict(model, test_emails,test_labels)
