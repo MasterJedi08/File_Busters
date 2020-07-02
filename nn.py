@@ -1,8 +1,7 @@
 # NOTES:
-# hamnspam files as training
-# ham / spam files as test
+# using ham + spam files in a 80 to 20 training to testing ratio
 
-
+#necessary import statements to run this program
 import tensorflow as tf
 from tensorflow import keras
 import matplotlib.pyplot as plt 
@@ -13,15 +12,38 @@ import email
 import email.policy
 from bs4 import BeautifulSoup
 import logging
+
+### ASHLEY what do these lines do?
 logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 
-#split into test and train, input (images) and output (labels)
-# CONSTANTS
+# Loading the dataset
+os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam') #finding the location of the data on the desktop
+
+#creating the lists of information for both the ham (non spam) and spam information
+ham_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham')) if len(name) > 20]
+spam_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam')) if len(name) > 20]
+
+#loads the data from the directory and opens the files 
+def load_email(is_spam, filename):
+    directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
+    with open(os.path.join(directory, filename), "rb") as f:
+        return email.parser.BytesParser(policy=email.policy.default).parse(f)
+
+# making lists to match index values with filenames    
+ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
+spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
+
+x = ham_emails[0].get_content()
+y = type(x)
+logging.debug('ham_emails[0].get_content = %s' % (x))
+logging.debug('type of ham_emails[0].get_content = %s' % (y))
+
+# CONSTANT VARIABLES
 NUM_EPOCHS = 5
 FILENAME = "file_busters_model.h5"
 
-# train_img = [ham + spam] train_labels = [ham_label + spam_label] << index must match
+# function used to train the data
 def train(train_emails, train_labels):
     # try to load already saved model
     try:
@@ -48,6 +70,8 @@ def train(train_emails, train_labels):
 
     return model
 
+# checks to see if the model is able to correctly predict the type (spam/ham) of email
+# with un-seen data
 def predict(model, test_images, test_labels):
     # get accuracy and metrics from model
     # params: test input and output
@@ -61,50 +85,21 @@ def predict(model, test_images, test_labels):
         #print prediction and actual
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
-# Load dataset
-# location test data
-os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam')
- 
-ham_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham')) if len(name) > 20]
-spam_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam')) if len(name) > 20]
-
-def load_email(is_spam, filename):
-    directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
-    with open(os.path.join(directory, filename), "rb") as f:
-        return email.parser.BytesParser(policy=email.policy.default).parse(f)
-
-# making list to match index values with filenames    
-ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
-spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
-
-x = ham_emails[0].get_content()
-y = type(x)
-logging.debug('ham_emails[0].get_content = %s' % (x))
-logging.debug('type of ham_emails[0].get_content = %s' % (y))
-# from stack overflow idk if this works?? returns TypeError: argument of type 'NoneType' is not iterable
-# for i in range(0, len(ham_emails)):
-#     message = ham_emails[i]
-#     if 'parts' in message['payload']:
-#         if message['payload']['parts'][0]['mimeType'] == 'multipart/alternative':
-#             ham_emails[i] = message['payload']['parts'][0]['parts'][0]['body']['data']    
-#         else:
-#             ham_emails[i] = message['payload']['parts'][0]['body']['data']   
-#     else:
-#         ham_emails[i] = message['payload']['body']['data']
-
-#joey
-numTrainHam = round(len(ham_emails)*.7,0)
+#creating the testing group vs. the training group
+numTrainHam = round(len(ham_emails)*.8,0)
 numTestHam = len(ham_emails) - numTrainHam
-numTrainSpam = round(len(spam_emails)*.7,0)
+numTrainSpam = round(len(spam_emails)*.8,0)
 numTestSpam = len(spam_emails) - numTrainHam
 
-# print(numTrainHam,numTestHam,numTrainSpam,numTestSpam)
+# creating lists for the content of spam vs ham emails
 testHam = []
 testSpam = []
 trainHam = []
 trainSpam = []
 
-logging.debug('Entering ham for loop of adding data to test/train lists')
+# for loop that cycles through the ham emails to separate them into testing and training data
+logging.debug('Entering ham for loop of adding data to test/train lists')  #statement helps us keep track of where we are in the process via the terminal
+
 for i in range(0, len(ham_emails)-1):
     # temp = ham_emails[i].get_content()
     msg = ham_emails[i]
@@ -122,7 +117,9 @@ for i in range(0, len(ham_emails)-1):
     else:
         testHam.append(temp)
 
-logging.debug('Finished ham - Entering spam for loop of adding data to test/train lists')
+# for loop that cycles through the apam emails to separate them into testing and training data
+logging.debug('Finished ham - Entering spam for loop of adding data to test/train lists')  #statement helps us keep track of where we are in the process via the terminal
+
 for j in range(0, len(spam_emails)-1):
     # temp = spam_emails[j].get_content()
     msg = ham_emails[i]
@@ -137,15 +134,19 @@ for j in range(0, len(spam_emails)-1):
         trainSpam.append(temp)
     else:
         testSpam.append(temp)
-logging.debug('Finished spam')
-# endJOey
 
-#train_emails
+#shows that all data has been sorted appropriately into testing/training data
+logging.debug('Finished spam')
+
+# this list contains all of the emails used for training (both ham and spam)
+train_emails
 train_emails = []
 train_emails.append(trainHam)
 train_emails.append(trainSpam)
 
-#train_labels 
+# this list assigns the appropriate names to the type of email contained in the list above
+#     meaning that for however many ham emails are in the list above, the name "ham" appears in this list to match the same indecies
+# used for training the data
 train_labels = []
 for x in range(len(trainHam)):
     train_labels.append("ham")
@@ -153,12 +154,14 @@ for x in range(len(trainHam)):
 for x in range(len(trainSpam)):
     train_labels.append("spam")   
 
-# test_emails
+# this list contains all of the emails used for testing (both ham and spam)
 test_emails = []
 test_emails.append(testHam)
 test_emails.append(testSpam)
 
-#train_labels 
+# this list assigns the appropriate names to the type of email contained in the list above
+#     meaning that for however many ham emails are in the list above, the name "ham" appears in this list to match the same indecies
+# used for testing the data
 test_labels = []
 for x in range(len(testHam)):
     test_labels.append("ham")
@@ -174,9 +177,11 @@ test_emails_arrays = np.asarray(test_emails)
 test_labels_arrays = np.asarray(test_labels)
 
 logging.debug('going into training')
-# train the data
+
+#train the data
 train(train_emails_arrays, train_labels_arrays)
-logging.debug('going into testing')
+
 # test model
+logging.debug('going into testing')
 predict(model, test_emails_arrays, test_labels_arrays)
-logging.debug('End Program')
+logging.debug('End Program') #signifies the end of the program through the terminal
