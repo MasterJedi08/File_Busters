@@ -14,8 +14,11 @@ from bs4 import BeautifulSoup
 import logging
 import clean
 
+# logging - debug statements throughout code
 logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
+# disables all logging statements
+logging.disable()
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
@@ -103,7 +106,6 @@ def preprocess():
     for x in range(trainSpam):
         train_labels.append("spam")   
 
-
     #train_labels 
     test_labels = []
     for x in range(testHam):
@@ -112,15 +114,8 @@ def preprocess():
     for x in range(testSpam):
         test_labels.append("spam")   
 
-    # logging.debug('converting into numpy arrays')
-    # conversion from lists to numPy array (lists not supported by tensor)
-    # train_emails_arrays = np.asarray(train_emails)
-    # train_labels_arrays = np.asarray(train_labels)
-    # test_emails_arrays = np.asarray(test_emails)
-    # test_labels_arrays = np.asarray(test_labels)
-
-    # convert_to_tensor()
-    train_emails, train_labels, test_emails, test_labels = clean.clean_data(train_emails, train_labels, test_emails, test_labels)
+    # cleans up email data
+    train_emails, test_emails = clean.clean_data(train_emails, test_emails)
     print(train_emails[0:2])
     print(train_labels[0:5])
     return train_emails, train_labels, test_emails, test_labels
@@ -161,7 +156,7 @@ def predict(model, test_images, test_labels):
     # params: test input and output
     # returns loss and accuracy -> wrong vs right
     test_loss, test_accuracy = model.evaluate(test_images, test_labels) 
-    print("Accuracy", test_accuracy)
+    print("Accuracy", test_accuracy, "\nLoss", test_loss)
 
     # use test data to predict output
     predictions = model.predict(test_images[:10])
@@ -169,6 +164,7 @@ def predict(model, test_images, test_labels):
         #print prediction and actual
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
+# preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
 logging.debug('going into training')
 # train the data
@@ -176,9 +172,6 @@ train(train_emails, train_labels)
 logging.debug('going into testing')
 # test model
 logging.debug('going into testing')
-predict(model, test_emails_arrays, test_labels_arrays)
+predict(model, test_emails, test_labels)
 logging.debug('End Program') #signifies the end of the program through the terminal
 
-# if '\n' in my_string:
-# my_output_list = [word for word in input_list if '\n' not in word]
-# or .split('\n')
