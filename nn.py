@@ -12,15 +12,44 @@ import email
 import email.policy
 from bs4 import BeautifulSoup
 import logging
+<<<<<<< Updated upstream
+
+### ASHLEY what do these lines do?
+=======
 import clean
+>>>>>>> Stashed changes
 logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 
-#split into test and train, input (images) and output (labels)
-# CONSTANTS
+# Loading the dataset
+os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam') #finding the location of the data on the desktop
+
+#creating the lists of information for both the ham (non spam) and spam information
+ham_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham')) if len(name) > 20]
+spam_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam')) if len(name) > 20]
+
+#loads the data from the directory and opens the files 
+def load_email(is_spam, filename):
+    directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
+    with open(os.path.join(directory, filename), "rb") as f:
+        return email.parser.BytesParser(policy=email.policy.default).parse(f)
+
+# making lists to match index values with filenames    
+ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
+spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
+
+x = ham_emails[0].get_content()
+y = type(x)
+logging.debug('ham_emails[0].get_content = %s' % (x))
+logging.debug('type of ham_emails[0].get_content = %s' % (y))
+
+# CONSTANT VARIABLES
 NUM_EPOCHS = 5
 FILENAME = "file_busters_model.h5"
 
+<<<<<<< Updated upstream
+# function used to train the data
+=======
 def preprocess():
     # Load dataset
     # location test data
@@ -128,15 +157,13 @@ def preprocess():
     
 
 # train_img = [ham + spam] train_labels = [ham_label + spam_label] << index must match
+>>>>>>> Stashed changes
 def train(train_emails, train_labels):
     # try to load already saved model
     try:
         # this line will throw error if file doesn't exist
         model=tf.keras.models.load_model(FILENAME)
     except:
-        # tf.keras.Input(dtype=str)
-        print(type(train_emails))
-        print(type(train_labels))
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
             # 128 neurons, rectified linear unit
@@ -259,6 +286,10 @@ for x in range(len(testSpam)):
 
 logging.debug('converting into numpy arrays')
 # conversion from lists to numPy array (lists not supported by tensor)
+train_emails_arrays = np.asarray(train_emails)
+train_labels_arrays = np.asarray(train_labels)
+test_emails_arrays = np.asarray(test_emails)
+test_labels_arrays = np.asarray(test_labels)
 
 logging.debug('going into training')
 
