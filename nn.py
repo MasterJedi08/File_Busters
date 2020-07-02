@@ -2,7 +2,6 @@
 # hamnspam files as training
 # ham / spam files as test
 
-
 import tensorflow as tf
 from tensorflow import keras
 import matplotlib.pyplot as plt 
@@ -14,6 +13,7 @@ import email.policy
 from bs4 import BeautifulSoup
 import logging
 logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.disable()
 logging.debug('Start of program')
 
 #split into test and train, input (images) and output (labels)
@@ -28,6 +28,13 @@ def train(train_emails, train_labels):
         # this line will throw error if file doesn't exist
         model=tf.keras.models.load_model(FILENAME)
     except:
+        # tf.keras.Input(dtype=str)
+        print(type(train_emails))
+        print(type(train_labels))
+        # train_dataset = tf.data.Dataset.from_tensor_slices((train_emails, train_labels))
+        train_emails = tf.convert_to_tensor(train_emails)
+        train_labels = tf.convert_to_tensor(train_labels)
+
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
             # 128 neurons, rectified linear unit
@@ -81,28 +88,20 @@ x = ham_emails[0].get_content()
 y = type(x)
 logging.debug('ham_emails[0].get_content = %s' % (x))
 logging.debug('type of ham_emails[0].get_content = %s' % (y))
-# from stack overflow idk if this works?? returns TypeError: argument of type 'NoneType' is not iterable
-# for i in range(0, len(ham_emails)):
-#     message = ham_emails[i]
-#     if 'parts' in message['payload']:
-#         if message['payload']['parts'][0]['mimeType'] == 'multipart/alternative':
-#             ham_emails[i] = message['payload']['parts'][0]['parts'][0]['body']['data']    
-#         else:
-#             ham_emails[i] = message['payload']['parts'][0]['body']['data']   
-#     else:
-#         ham_emails[i] = message['payload']['body']['data']
 
 #joey
-numTrainHam = round(len(ham_emails)*.7,0)
+numTrainHam = round(len(ham_emails)*0.8,0)
 numTestHam = len(ham_emails) - numTrainHam
-numTrainSpam = round(len(spam_emails)*.7,0)
+numTrainSpam = round(len(spam_emails)*0.8,0)
 numTestSpam = len(spam_emails) - numTrainHam
 
 # print(numTrainHam,numTestHam,numTrainSpam,numTestSpam)
-testHam = []
-testSpam = []
-trainHam = []
-trainSpam = []
+train_emails = []
+test_emails = []
+trainHam = 0
+trainSpam = 0
+testHam = 0
+testSpam = 0
 
 logging.debug('Entering ham for loop of adding data to test/train lists')
 for i in range(0, len(ham_emails)-1):
@@ -118,9 +117,11 @@ for i in range(0, len(ham_emails)-1):
     z = type(temp)
     logging.debug("Current email: %s" %(z))
     if i < numTrainHam:        
-        trainHam.append(temp)    
+        train_emails.append(temp)
+        trainHam+=1    
     else:
-        testHam.append(temp)
+        test_emails.append(temp)
+        testHam+=1
 
 logging.debug('Finished ham - Entering spam for loop of adding data to test/train lists')
 for j in range(0, len(spam_emails)-1):
@@ -134,49 +135,48 @@ for j in range(0, len(spam_emails)-1):
         if part.get_content_type() == 'text/plain':
             temp = part.get_payload()
     if j < numTrainSpam:        
-        trainSpam.append(temp)
+        train_emails.append(temp)
+        trainSpam+=1
     else:
-        testSpam.append(temp)
+        test_emails.append(temp)
+        testSpam+=1
 logging.debug('Finished spam')
 # endJOey
 
-#train_emails
-train_emails = []
-train_emails.append(trainHam)
-train_emails.append(trainSpam)
 
 #train_labels 
 train_labels = []
-for x in range(len(trainHam)):
+for x in range(trainHam):
     train_labels.append("ham")
 
-for x in range(len(trainSpam)):
+for x in range(trainSpam):
     train_labels.append("spam")   
 
-# test_emails
-test_emails = []
-test_emails.append(testHam)
-test_emails.append(testSpam)
 
 #train_labels 
 test_labels = []
-for x in range(len(testHam)):
+for x in range(testHam):
     test_labels.append("ham")
 
-for x in range(len(testSpam)):
+for x in range(testSpam):
     test_labels.append("spam")   
 
 logging.debug('converting into numpy arrays')
 # conversion from lists to numPy array (lists not supported by tensor)
-train_emails_arrays = np.asarray(train_emails)
-train_labels_arrays = np.asarray(train_labels)
-test_emails_arrays = np.asarray(test_emails)
-test_labels_arrays = np.asarray(test_labels)
+# train_emails_arrays = np.asarray(train_emails)
+# train_labels_arrays = np.asarray(train_labels)
+# test_emails_arrays = np.asarray(test_emails)
+# test_labels_arrays = np.asarray(test_labels)
+
+# convert_to_tensor()
+
+print(train_emails[0:1])
+print(train_labels[0:5])
 
 logging.debug('going into training')
 # train the data
-train(train_emails_arrays, train_labels_arrays)
+train(train_emails, train_labels)
 logging.debug('going into testing')
 # test model
-predict(model, test_emails_arrays, test_labels_arrays)
+predict(model, test_emails, test_labels)
 logging.debug('End Program')
