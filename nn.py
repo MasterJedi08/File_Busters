@@ -154,7 +154,7 @@ for x in range(len(trainHam)):
 for x in range(len(trainSpam)):
     train_labels.append("spam")   
 
-# this list contains all of the emails used for testing (both ham and spam)
+# this list contains all of the emails used for testing (both ham and spam) 
 test_emails = []
 test_emails.append(testHam)
 test_emails.append(testSpam)
