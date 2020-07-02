@@ -24,6 +24,7 @@ logging.disable()
 NUM_EPOCHS = 5
 FILENAME = "file_busters_model.h5"
 
+# cleans data
 def preprocess():
     # Load dataset
     # location test data
