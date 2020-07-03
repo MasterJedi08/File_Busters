@@ -17,8 +17,8 @@ import clean
 # logging - debug statements throughout code
 logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
-# disables all logging statements
-logging.disable()
+# disables all logging statements after this line
+# logging.disable()
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
@@ -26,6 +26,7 @@ FILENAME = "file_busters_model.h5"
 
 # cleans data
 def preprocess():
+    logging.debug('preprocess function in process')
     # Load dataset
     # location test data
     os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam')
@@ -42,11 +43,6 @@ def preprocess():
     ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
     spam_emails = [load_email(is_spam=True, filename=name) for name in spam_filenames]
 
-    x = ham_emails[0].get_content()
-    y = type(x)
-    logging.debug('ham_emails[0].get_content = %s' % (x))
-    logging.debug('type of ham_emails[0].get_content = %s' % (y))
-
     #joey
     numTrainHam = round(len(ham_emails)*0.8,0)
     numTrainSpam = round(len(spam_emails)*0.8,0)
@@ -61,8 +57,8 @@ def preprocess():
     for i in range(0, len(ham_emails)-1):
         # temp = ham_emails[i].get_content()
         msg = ham_emails[i]
-        logging.debug("Index: %d" %(i))
-        logging.debug('Entering ham msg walking for loop')
+        # logging.debug("Index: %d" %(i))
+        # logging.debug('Entering ham msg walking for loop')
         for part in msg.walk():
             # each part is a either non-multipart, or another multipart message
             # that contains further parts... Message is organized like a tree
@@ -82,8 +78,8 @@ def preprocess():
     for j in range(0, len(spam_emails)-1):
         # temp = spam_emails[j].get_content()
         msg = ham_emails[i]
-        logging.debug("Index: %d" %(j))
-        logging.debug('Entering spam msg walking for loop')
+        # logging.debug("Index: %d" %(j))
+        # logging.debug('Entering spam msg walking for loop')
         for part in msg.walk():
             # each part is a either non-multipart, or another multipart message
             # that contains further parts... Message is organized like a tree
@@ -96,7 +92,7 @@ def preprocess():
         else:
             test_emails.append(temp)
             testSpam+=1
-    logging.debug('Finished spam')
+    # logging.debug('Finished spam')
     # endJOey
 
     #train_labels 
@@ -115,10 +111,12 @@ def preprocess():
     for x in range(testSpam):
         test_labels.append("spam")   
 
+    logging.debug('going to clean.py')
     # cleans up email data
     train_emails, test_emails = clean.clean_data(train_emails, test_emails)
-    print(train_emails[0:2])
-    print(train_labels[0:5])
+    logging.debug('back from clean.py')
+
+    # return data
     return train_emails, train_labels, test_emails, test_labels
 
 def train(train_emails, train_labels):
@@ -131,6 +129,7 @@ def train(train_emails, train_labels):
         train_labels = tf.convert_to_tensor(train_labels)
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
+            keras.layers.Flatten(input_shape=(28, 28)),
             # 128 neurons, rectified linear unit
             keras.layers.Dense(128, activation="relu"), 
             # num of output classes, softmax probability dist (softmax = softens max values)
