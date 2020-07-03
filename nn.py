@@ -15,7 +15,7 @@ import logging
 import clean
 
 # logging - debug statements throughout code
-logging.basicConfig(filename='debug6.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='newdebug2.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 # disables all logging statements after this line
 # logging.disable()
@@ -57,58 +57,63 @@ def preprocess():
     for i in range(0, len(ham_emails)-1):
         # temp = ham_emails[i].get_content()
         msg = ham_emails[i]
-        # logging.debug("Index: %d" %(i))
-        # logging.debug('Entering ham msg walking for loop')
+
         for part in msg.walk():
-            # each part is a either non-multipart, or another multipart message
-            # that contains further parts... Message is organized like a tree
+            # gets only text part of email
             if part.get_content_type() == 'text/plain':
                 temp = part.get_content()
-        # z = type(temp)
-        # temp = msg.get_content()
-        # logging.debug("Current email: %s" %(z))
+        
         if i < numTrainHam:        
             train_emails.append(temp)
             trainHam+=1    
+            logging.debug('current # ham emails for training: %d' %(trainHam))
         else:
             test_emails.append(temp)
             testHam+=1
+            logging.debug('current # ham emails for testing: %d' %(testHam))
 
-    logging.debug('Finished ham - Entering spam for loop of adding data to test/train lists')
+    logging.debug('Finished ham - total # ham training emails: %d - total # ham test emails: %d' %(trainHam, testHam))
+    logging.debug('Entering spam for loop of adding data to test/train lists')
     for j in range(0, len(spam_emails)-1):
         # temp = spam_emails[j].get_content()
         msg = ham_emails[i]
-        # logging.debug("Index: %d" %(j))
-        # logging.debug('Entering spam msg walking for loop')
+
         for part in msg.walk():
-            # each part is a either non-multipart, or another multipart message
-            # that contains further parts... Message is organized like a tree
+            # gets only text part of email
             if part.get_content_type() == 'text/plain':
                 temp = part.get_content()
-        # temp = msg.get_content()
+        
         if j < numTrainSpam:        
             train_emails.append(temp)
             trainSpam+=1
+            logging.debug('current # spam emails for training: %d' %(trainSpam))
         else:
             test_emails.append(temp)
             testSpam+=1
-    # logging.debug('Finished spam')
+    
+    logging.debug('Finished spam - total # spam training emails: %d' %(trainSpam))
     # endJOey
 
     #train_labels 
     train_labels = []
-    for x in range(trainHam):
+    for x in range(0, trainHam):
         train_labels.append("ham")
+        logging.debug('current # ham labels: %d' %(x+1))
+   
+    ham_labels_len = len(train_labels)
 
-    for x in range(trainSpam):
-        train_labels.append("spam")   
+    for x in range(0, trainSpam):
+        train_labels.append("spam") 
+        logging.debug('current # ham labels: %d' %(x+1))
 
-    #train_labels 
+    logging.debug('total # ham labels: %d - total # spam labels: %d' %(ham_labels_len, (len(train_labels)-ham_labels_len)))
+
+    #test_labels 
     test_labels = []
-    for x in range(testHam):
+    for x in range(0, testHam):
         test_labels.append("ham")
 
-    for x in range(testSpam):
+    for x in range(0, testSpam):
         test_labels.append("spam")   
 
     logging.debug('going to clean.py')
@@ -129,7 +134,7 @@ def train(train_emails, train_labels):
         train_labels = tf.convert_to_tensor(train_labels)
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
-            keras.layers.Flatten(input_shape=(28, 28)),
+            keras.layers.Flatten(),
             # 128 neurons, rectified linear unit
             keras.layers.Dense(128, activation="relu"), 
             # num of output classes, softmax probability dist (softmax = softens max values)
@@ -166,12 +171,16 @@ def predict(model, test_images, test_labels):
 
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
-logging.debug('going into training')
+logging.debug('num train emails: %d - num train labels: %d'  %(len(train_emails), len(train_labels)))
+logging.debug('num test emails: %d - num test labels: %d'  %(len(test_emails), len(test_labels)))
+
 # train the data
+logging.debug('going into training')
 train(train_emails, train_labels)
-logging.debug('going into testing')
+
 # test model
 logging.debug('going into testing')
 predict(model, test_emails, test_labels)
+
 logging.debug('End Program') #signifies the end of the program through the terminal
 

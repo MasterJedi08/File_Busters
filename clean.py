@@ -2,8 +2,8 @@
 import logging
 
 # logging - debug statements throughout code
-logging.basicConfig(filename='debug14.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logging.disable()
+logging.basicConfig(filename='newdebug2.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.disable()
 logging.debug('Start of clean.py program')
 
 # list of words/characters to remove from email content
@@ -100,7 +100,7 @@ def clean_data(train_emails, test_emails):
 
         word_list = (' '.join([item for item in word_list]))
         logging.debug('type of word_list after .join(\'\') is called: %s' %(type(word_list)))
-        new_train_emails.append(word_list)
+        new_test_emails.append(word_list)
 
     return new_train_emails, new_test_emails
 
