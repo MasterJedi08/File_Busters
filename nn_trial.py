@@ -151,16 +151,15 @@ def train(train_emails, train_labels):
         #compile model
         model.compile(optimizer="adam", loss="binary_crossentropy",
         metrics=["accuracy"])
-        print('f')
-
-        model.build(input_shape=[])
-        model.summary()
-        print('g')
+        print('f')        
         
         # fit model
         model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
+        print('g')
+
+        model.summary()
         print('h')
-        
+
         print('i')
         # save model
         model.save(FILENAME)
