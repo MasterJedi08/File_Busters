@@ -1,4 +1,3 @@
-# import nltk
 import logging
 
 # logging - debug statements throughout code
@@ -10,6 +9,7 @@ logging.debug('Start of clean.py program')
 stopwords = ['\n', '\n', '|', '<', '>', '', ' ', '-', '>>>>>', 'Sender:', 'From:', 'Date:', 'Message-ID:', 'Forwarded-by:', '---', 
 '---------------------', '\n\n------------------------']
 
+# removes unwanted characters from training and testing data - called in nn.py
 def clean_data(train_emails, test_emails):
     #----------------
     # TRAINING DATA

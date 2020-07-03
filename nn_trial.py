@@ -26,6 +26,11 @@ logging.disable()
 NUM_EPOCHS = 5
 FILENAME = "file_busters_model.h5"
 
+def load_email(is_spam, filename):
+    directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
+    with open(os.path.join(directory, filename), "rb") as f:
+        return email.parser.BytesParser(policy=email.policy.default).parse(f)
+
 # cleans data
 def preprocess():
     logging.debug('preprocess function in process')
@@ -35,11 +40,6 @@ def preprocess():
     
     ham_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham')) if len(name) > 20]
     spam_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam')) if len(name) > 20]
-
-    def load_email(is_spam, filename):
-        directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
-        with open(os.path.join(directory, filename), "rb") as f:
-            return email.parser.BytesParser(policy=email.policy.default).parse(f)
 
     # making list to match index values with filenames    
     ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
@@ -135,19 +135,23 @@ def train(train_emails, train_labels):
         print('a')
         model = "https://tfhub.dev/google/tf2-preview/gnews-swivel-20dim/1"
         print('b')
+        
         hub_layer = hub.KerasLayer(model, output_shape=[20], input_shape=[], 
                                 dtype=tf.string, trainable=True)
-        print('c')                        
+        print('c')   
+
         hub_layer(train_emails[:3])
         print('d')
+
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
             # 128 neurons, rectified linear unit
             keras.layers.Dense(128, activation="relu"), 
             # num of output classes, softmax probability dist (softmax = softens max values)
             keras.layers.Dense(2, activation="softmax")
-            ])
+            ])            
         print('e')
+
         #compile model
         model.compile(optimizer="adam", loss="binary_crossentropy",
         metrics=["accuracy"])

@@ -24,6 +24,11 @@ logging.debug('Start of program')
 NUM_EPOCHS = 5
 FILENAME = "file_busters_model.h5"
 
+def load_email(is_spam, filename):
+        directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
+        with open(os.path.join(directory, filename), "rb") as f:
+            return email.parser.BytesParser(policy=email.policy.default).parse(f)
+
 # cleans data
 def preprocess():
     logging.debug('preprocess function in process')
@@ -33,11 +38,6 @@ def preprocess():
     
     ham_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham')) if len(name) > 20]
     spam_filenames = [name for name in sorted(os.listdir('C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam')) if len(name) > 20]
-
-    def load_email(is_spam, filename):
-        directory = "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\spam" if is_spam else "C:\\Users\\Student\\Desktop\\extension_data\\hamnspam\\ham"
-        with open(os.path.join(directory, filename), "rb") as f:
-            return email.parser.BytesParser(policy=email.policy.default).parse(f)
 
     # making list to match index values with filenames    
     ham_emails = [load_email(is_spam=False, filename=name) for name in ham_filenames]
