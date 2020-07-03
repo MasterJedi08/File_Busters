@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 import logging
 import clean
 
+import tensorflow_hub as hub
+
 # logging - debug statements throughout code
 logging.basicConfig(filename='newdebug2.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
@@ -118,11 +120,11 @@ def preprocess():
 
     logging.debug('going to clean.py')
     # cleans up email data
-    train_emails_cfd, test_emails_cfd = clean.clean_data(train_emails, test_emails)
+    train_emails, test_emails = clean.clean_data(train_emails, test_emails)
     logging.debug('back from clean.py')
 
     # return data
-    return train_emails_cfd, train_labels, test_emails_cfd, test_labels
+    return train_emails, train_labels, test_emails, test_labels
 
 def train(train_emails, train_labels):
     # try to load already saved model
@@ -130,8 +132,14 @@ def train(train_emails, train_labels):
         # this line will throw error if file doesn't exist
         model=tf.keras.models.load_model(FILENAME)
     except:
-        train_emails = tf.convert_to_tensor(train_emails)
-        train_labels = tf.convert_to_tensor(train_labels)
+        print('a')
+        model = "https://tfhub.dev/google/tf2-preview/gnews-swivel-20dim/1"
+        print('b')
+        hub_layer = hub.KerasLayer(model, output_shape=[20], input_shape=[], 
+                                dtype=tf.string, trainable=True)
+        print('c')                        
+        hub_layer(train_emails[:3])
+        print('d')
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
             # 128 neurons, rectified linear unit
@@ -139,16 +147,22 @@ def train(train_emails, train_labels):
             # num of output classes, softmax probability dist (softmax = softens max values)
             keras.layers.Dense(2, activation="softmax")
             ])
-
+        print('e')
         #compile model
         model.compile(optimizer="adam", loss="binary_crossentropy",
         metrics=["accuracy"])
-
+        print('f')
+        model.build(input_shape=[])
+        model.summary()
+        print('g')
         # fit model
         model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
-
+        print('h')
+        
+        print('i')
         # save model
         model.save(FILENAME)
+        print('j')
 
     return model
 
@@ -169,16 +183,23 @@ def predict(model, test_images, test_labels):
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
 # preprocess data
-train_emails_cfd, train_labels, test_emails_cfd, test_labels = preprocess()
+train_emails, train_labels, test_emails, test_labels = preprocess()
+logging.debug('num train emails: %d - num train labels: %d'  %(len(train_emails), len(train_labels)))
+logging.debug('num test emails: %d - num test labels: %d'  %(len(test_emails), len(test_labels)))
+
+#arrays of data
+train_emails = np.asarray(train_emails)
+train_labels = np.asarray(train_labels)
+test_emails = np.asarray(test_emails)
+test_labels = np.asarray(test_labels)
 
 # train the data
 logging.debug('going into training')
-print(type(train_emails_cfd), type(train_labels))
-train(train_emails_cfd, train_labels)
+train(train_emails, train_labels)
 
 # test model
 logging.debug('going into testing')
-predict(model, test_emails_cfd, test_labels)
+predict(model, test_emails, test_labels)
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 

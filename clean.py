@@ -56,10 +56,17 @@ def clean_data(train_emails, test_emails):
         logging.debug('type of word_list after .join(\'\') is called: %s' %(type(word_list)))
         new_train_emails.append(word_list)
 
-        # TODO: create bigrams/cfd model try everything else first before
-        # doing this part??
-
+    # TODO: create bigrams/cfd model 
+    # transcripts_bigram = nltk.bigrams(new_train_emails)
+    # logging.debug("file bigram: %s" %(transcripts_bigram))
+    # train_emails_cfd = nltk.ConditionalFreqDist(transcripts_bigram)
+    
+    
+    
+    
     logging.debug('completed training emails')
+
+
 
     #----------------
     # TESTING DATA
@@ -102,7 +109,12 @@ def clean_data(train_emails, test_emails):
         logging.debug('type of word_list after .join(\'\') is called: %s' %(type(word_list)))
         new_test_emails.append(word_list)
 
-    return new_train_emails, new_test_emails
+    # transcripts_bigram = nltk.bigrams(new_test_emails)
+    # logging.debug("file bigram: %s" %(transcripts_bigram))
+
+    # test_emails_cfd = nltk.ConditionalFreqDist(transcripts_bigram)
+
+    return train_emails, test_emails
 
     # if '\n' in my_string:
 # my_output_list = [word for word in input_list if '\n' not in word]
