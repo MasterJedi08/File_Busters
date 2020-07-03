@@ -2,7 +2,7 @@
 import logging
 
 # logging - debug statements throughout code
-logging.basicConfig(filename='newdebug2.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='newdebug3.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 # logging.disable()
 logging.debug('Start of clean.py program')
 
@@ -50,8 +50,9 @@ def clean_data(train_emails, test_emails):
 
         logging.debug('num words looped thru: %d' %(count_all))
         logging.debug('count words kept: %d' %(count_rem))
-        logging.debug('removed stop words - First few lines: %s' %(word_list[0:25]))
+        logging.debug('removed stop words - First few lines: %s' %(word_list[0:120]))
 
+        # take list of words and join as one string, add to the modified train emails list
         word_list = (' '.join([item for item in word_list]))
         logging.debug('type of word_list after .join(\'\') is called: %s' %(type(word_list)))
         new_train_emails.append(word_list)
@@ -103,8 +104,9 @@ def clean_data(train_emails, test_emails):
 
         logging.debug('num words looped thru: %d' %(count_all))
         logging.debug('count words kept: %d' %(count_rem))
-        logging.debug('removed stop words - First few lines: %s' %(word_list[0:25]))
+        logging.debug('removed stop words - First few lines: %s' %(word_list[0:120]))
 
+        # take list of words and join as one string, add to the modified train emails list
         word_list = (' '.join([item for item in word_list]))
         logging.debug('type of word_list after .join(\'\') is called: %s' %(type(word_list)))
         new_test_emails.append(word_list)
@@ -115,7 +117,3 @@ def clean_data(train_emails, test_emails):
     # test_emails_cfd = nltk.ConditionalFreqDist(transcripts_bigram)
 
     return train_emails, test_emails
-
-    # if '\n' in my_string:
-# my_output_list = [word for word in input_list if '\n' not in word]
-# or .split('\n')

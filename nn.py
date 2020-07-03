@@ -15,10 +15,10 @@ import logging
 import clean
 
 # logging - debug statements throughout code
-logging.basicConfig(filename='newdebug2.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='newdebug3.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 # disables all logging statements after this line
-logging.disable()
+# logging.disable()
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
@@ -74,6 +74,7 @@ def preprocess():
 
     logging.debug('Finished ham - total # ham training emails: %d - total # ham test emails: %d' %(trainHam, testHam))
     logging.debug('Entering spam for loop of adding data to test/train lists')
+
     for j in range(0, len(spam_emails)-1):
         # temp = spam_emails[j].get_content()
         msg = ham_emails[i]
@@ -116,8 +117,9 @@ def preprocess():
     for x in range(0, testSpam):
         test_labels.append("spam")   
 
-    logging.debug('going to clean.py')
+    
     # cleans up email data
+    logging.debug('going to clean.py')
     train_emails_cfd, test_emails_cfd = clean.clean_data(train_emails, test_emails)
     logging.debug('back from clean.py')
 

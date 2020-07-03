@@ -152,9 +152,11 @@ def train(train_emails, train_labels):
         model.compile(optimizer="adam", loss="binary_crossentropy",
         metrics=["accuracy"])
         print('f')
+
         model.build(input_shape=[])
         model.summary()
         print('g')
+        
         # fit model
         model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
         print('h')
