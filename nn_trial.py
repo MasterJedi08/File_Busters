@@ -24,6 +24,7 @@ logging.disable()
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
+BATCHSIZE = 250 
 FILENAME = "file_busters_model.h5"
 
 def load_email(is_spam, filename):
@@ -31,7 +32,7 @@ def load_email(is_spam, filename):
     with open(os.path.join(directory, filename), "rb") as f:
         return email.parser.BytesParser(policy=email.policy.default).parse(f)
 
-# cleans data
+# ---------------- PREPROCESS ------------------
 def preprocess():
     logging.debug('preprocess function in process')
     # Load dataset
@@ -126,6 +127,8 @@ def preprocess():
     # return data
     return train_emails, train_labels, test_emails, test_labels
 
+# ---------------- TRAIN ------------------
+
 def train(train_emails, train_labels):
     # try to load already saved model
     try:
@@ -140,25 +143,23 @@ def train(train_emails, train_labels):
                                 dtype=tf.string, trainable=True)
         print('c')   
 
-        hub_layer(train_emails[:3])
-        print('d')
-
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
+            hub_layer,
             # 128 neurons, rectified linear unit
             keras.layers.Dense(128, activation="relu"), 
             # num of output classes, softmax probability dist (softmax = softens max values)
             keras.layers.Dense(2, activation="softmax")
-            ])            
+            ])         
         print('e')
 
         #compile model
-        model.compile(optimizer="adam", loss="binary_crossentropy",
+        model.compile(optimizer="adam", loss="sparse_categorical_crossentropy",
         metrics=["accuracy"])
-        print('f')        
+        print('f')       
         
         # fit model
-        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
+        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE)
         print('g')
 
         model.summary()
@@ -171,7 +172,7 @@ def train(train_emails, train_labels):
 
     return model
 
-    
+# ---------------- Test ------------------    
 # checks to see if the model is able to correctly predict the type (spam/ham) of email
 # with un-seen data
 def predict(model, test_images, test_labels):
@@ -200,7 +201,7 @@ test_labels = np.asarray(test_labels)
 
 # train the data
 logging.debug('going into training')
-train(train_emails, train_labels)
+model = train(train_emails, train_labels)
 
 # test model
 logging.debug('going into testing')

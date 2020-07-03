@@ -15,7 +15,7 @@ import logging
 import clean
 
 # logging - debug statements throughout code
-logging.basicConfig(filename='newdebug3.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='newdebug4.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 # disables all logging statements after this line
 # logging.disable()
@@ -175,8 +175,7 @@ train_emails_cfd, train_labels, test_emails_cfd, test_labels = preprocess()
 
 # train the data
 logging.debug('going into training')
-print(type(train_emails_cfd), type(train_labels))
-train(train_emails_cfd, train_labels)
+model = train(train_emails_cfd, train_labels)
 
 # test model
 logging.debug('going into testing')
