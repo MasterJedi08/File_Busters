@@ -2,7 +2,7 @@ import logging
 
 # logging - debug statements throughout code
 logging.basicConfig(filename='newdebug4.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-# logging.disable()
+logging.disable()
 logging.debug('Start of clean.py program')
 
 # list of words/characters to remove from email content
