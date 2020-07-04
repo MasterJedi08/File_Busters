@@ -5,7 +5,7 @@
     "description": "Spam email detector",
     "content_scripts" : [
         {
-            "matches" : ["*mail.google.com/*"],
+            "matches" : ["<all_urls>"],
             "js" : ["content.js"]
         }
     ],
@@ -15,6 +15,6 @@
     "permissions": [ "activeTab" ],
     "browser-action": {
         "default_icon": "tempGhost.png"
-    }
+    } 
     }
     

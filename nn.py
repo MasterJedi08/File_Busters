@@ -22,6 +22,7 @@ logging.debug('Start of program')
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
+BATCHSIZE = 200
 FILENAME = "file_busters_model.h5"
 
 def load_email(is_spam, filename):
@@ -147,7 +148,7 @@ def train(train_emails, train_labels):
         metrics=["accuracy"])
 
         # fit model
-        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
+        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE)
 
         # save model
         model.save(FILENAME)
