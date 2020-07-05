@@ -5,6 +5,7 @@
 import tensorflow as tf
 from tensorflow import keras
 import tensorflow_hub as hub
+from tensorflow.keras.preprocessing.text import Tokenizer
 import matplotlib.pyplot as plt 
 import numpy as np
 import pandas as pd
@@ -35,6 +36,9 @@ if gpus:
 NUM_EPOCHS = 5
 BATCHSIZE = 200
 FILENAME = "file_busters_model.h5"
+vocab_size = 25000
+embedding_dim = 16
+max_length = 100
 
 # # used in preprocess() -- returns file and label
 # # labels: 0 = ham -- 1 = spam
@@ -101,14 +105,34 @@ def preprocess():
     for x in range(0, testSpam):
         test_email_labels.append("spam")   
 
-    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    embeddings_train = embed(train_emails)
-    embeddings_test = embed(test_emails)
-    embeddings_train_labels = embed(train_email_labels)
-    embeddings_test_labels = embed(test_email_labels)
+    # data as arrays -- lists unsupported by tf
+    # train_emails = np.asarray(train_emails)
+    # test_emails = np.asarray(test_emails)
+    # train_email_labels = np.asarray(train_email_labels)
+    # test_email_labels = np.asarray(test_email_labels)
 
-    return embeddings_train, embeddings_train_labels, embeddings_test, embeddings_test_labels
+    # tokenizing training data
 
+    # create a tokenizer object 
+    # num_words represents the max number of most common words kept -- oov_token replaces words out of of vocab w/ '<OOV>' so it doesnt screw w/ length
+    tokenizer = Tokenizer(num_words = 25000, oov_token='<OOV>')
+    # fits tokenizer to data
+    tokenizer.fit_on_texts(train_emails)
+    # data available as tokenizer's word index property -- dictionary with key as word and value as number
+    training_emails = tokenizer.word_index
+    # creates sequence of words as numbers
+    train_sequences = tokenizer.texts_to_sequences(train_emails)
+
+    print(dict(list(training_emails.items())[0:5]))
+    print(type(train_sequences))
+
+    # tokenizing test data
+    tokenizer.fit_on_texts(test_emails)
+    testing_emails = tokenizer.word_index
+    print(dict(list(testing_emails.items())[0:5]))
+    test_sequences = tokenizer.texts_to_sequences(test_emails)
+
+    return train_sequences, train_email_labels, test_sequences, test_email_labels
 
 
 # ------------ TRAIN -----------------------
@@ -123,10 +147,10 @@ def train(train_emails, train_labels):
 
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
-            # learn about the datapoints in relationship to the datapoints that came before it and after it
-            # keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
+            keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
+            keras.layers.GlobalAveragePooling1D(),
             # 128 neurons, rectified linear unit
-            keras.layers.Dense(128, activation="relu"),        
+            keras.layers.Dense(128, activation="relu"),      
 
             # num of output classes, softmax probability dist (softmax = softens max values)
             keras.layers.Dense(2, activation="softmax")
@@ -137,7 +161,7 @@ def train(train_emails, train_labels):
         # model.compile(optimizer="adam", loss="binary_crossentropy",
         # metrics=["accuracy"])
         model.compile(optimizer='adam',
-              loss="sparse_categorical_crossentropy",
+              loss="binary_crossentropy",
               metrics=['accuracy'])
         print('e')
 
