@@ -5,7 +5,7 @@
 import tensorflow as tf
 from tensorflow import keras
 import tensorflow_hub as hub
-from tensorflow.keras.preprocessing.text import Tokenizer
+# from tensorflow.keras.preprocessing.text import Tokenizer
 import matplotlib.pyplot as plt 
 import numpy as np
 import pandas as pd
@@ -115,24 +115,31 @@ def preprocess():
 
     # create a tokenizer object 
     # num_words represents the max number of most common words kept -- oov_token replaces words out of of vocab w/ '<OOV>' so it doesnt screw w/ length
-    tokenizer = Tokenizer(num_words = 25000, oov_token='<OOV>')
+    tokenizer = keras.preprocessing.text.Tokenizer(num_words = 25000, oov_token='<OOV>')
     # fits tokenizer to data
     tokenizer.fit_on_texts(train_emails)
     # data available as tokenizer's word index property -- dictionary with key as word and value as number
     training_emails = tokenizer.word_index
     # creates sequence of words as numbers
     train_sequences = tokenizer.texts_to_sequences(train_emails)
+    train_padded = keras.preprocessing.sequence.pad_sequences(train_sequences)
 
     print(dict(list(training_emails.items())[0:5]))
-    print(type(train_sequences))
+    print(type(train_sequences), type(train_padded))
 
     # tokenizing test data
     tokenizer.fit_on_texts(test_emails)
     testing_emails = tokenizer.word_index
     print(dict(list(testing_emails.items())[0:5]))
     test_sequences = tokenizer.texts_to_sequences(test_emails)
+    test_padded = keras.preprocessing.sequence.pad_sequences(test_sequences)
 
-    return train_sequences, train_email_labels, test_sequences, test_email_labels
+    train_padded = np.array(train_padded)
+    train_labels = np.array(train_email_labels)
+    test_padded = np.array(test_padded)
+    test_labels = np.array(test_email_labels)
+
+    return train_padded, train_email_labels, test_padded, test_email_labels
 
 
 # ------------ TRAIN -----------------------
