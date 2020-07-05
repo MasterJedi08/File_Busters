@@ -21,7 +21,7 @@ Chrome
   manifest.json - required manifest for extensions<br></br>
   content.js - JavaScript file of script that runs when active page loads<br></br>
   background.js - JavaScript file of script that runs in background when browser opens<br></br>
-    <br></br><br></br>
+    <br></br>
   <h5>Neural Network Python Files</h5>
   n6.py - the neural network code<br></br>
   nn.py - the original neural network (not used)<br></br>
