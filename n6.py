@@ -134,14 +134,17 @@ def preprocess():
     test_padded = np.array(test_padded)
     test_email_labels = np.array(test_email_labels)
 
-    print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
+    # print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
 
+    # returns padded training/testing data & labels (all of the same size)
     return train_padded[:training_size], train_email_labels[:training_size], test_padded[:testing_size], test_email_labels[:testing_size]
 
 
 # ------------ TRAIN -----------------------
 
 def train(train_emails, train_labels, test_emails, test_labels):
+    # below try/except statement is commented out so we could continuously optimize our model
+
     # try to load already saved model
     # try:
     #     # this line will throw error if file doesn't exist
@@ -171,7 +174,7 @@ def train(train_emails, train_labels, test_emails, test_labels):
             metrics=['accuracy'])
     print('e')
 
-    # fit model
+    # fit model and save results as history
     history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, validation_data=(test_emails, test_labels))
     print('f')
     # save model
@@ -181,7 +184,7 @@ def train(train_emails, train_labels, test_emails, test_labels):
     return (history, model)
 
 
-# -------------- TEST ---------------------
+# -------------- TEST - NOT USED ---------------------
 
 # checks to see if the model is able to correctly predict the type (spam/ham) of email
 # with un-seen data
@@ -199,6 +202,7 @@ def predict(model, test_emails, test_labels):
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
 # ---------- SHOW RESULTS ------------------
+
 # this function is for visualizing accuracy and loss after each epoch
 def show_results(history):
     # get array of accuracy values after each epoch for training and testing
