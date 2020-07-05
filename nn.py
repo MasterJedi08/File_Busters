@@ -78,7 +78,7 @@ def preprocess():
 
     for j in range(0, len(spam_emails)-1):
         # temp = spam_emails[j].get_content()
-        msg = ham_emails[i]
+        msg = spam_emails[j]
 
         for part in msg.walk():
             # gets only text part of email

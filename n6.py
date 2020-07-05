@@ -101,52 +101,28 @@ def preprocess():
     for x in range(0, testSpam):
         test_email_labels.append("spam")   
 
+    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    embeddings_train = embed(train_emails)
+    embeddings_test = embed(test_emails)
+    embeddings_train_labels = embed(train_email_labels)
+    embeddings_test_labels = embed(test_email_labels)
 
-    # ----- CREATE TRAIN DATAFRAME --------
+    return embeddings_train, embeddings_train_labels, embeddings_test, embeddings_test_labels
 
-    # creates pandas dataframe with 2 columns: email and labels
-    emails_df = pd.DataFrame(train_emails, columns=['emails'])
-    emails_df['labels'] = train_email_labels  
-
-    # pops out values of labels column
-    labels = emails_df.pop('labels')
-    # creates the training dataset
-    train_dataset = tf.data.Dataset.from_tensor_slices((emails_df.values, labels.values))
-
-    # ----- CREATE TEST DATAFRAME ---------
-
-    # creates pandas dataframe with 2 columns: email and labels
-    test_emails_df = pd.DataFrame(test_emails, columns=['emails'])
-    test_emails_df['labels'] = test_email_labels 
-
-    # pops out values of labels column
-    test_labels = test_emails_df.pop('labels')
-    # creates the training dataset
-    test_dataset = tf.data.Dataset.from_tensor_slices((test_emails_df.values, test_labels.values))
-
-    return train_dataset, test_dataset
 
 
 # ------------ TRAIN -----------------------
 
-def train(train_data):
+def train(train_emails, train_labels):
     # try to load already saved model
     try:
         # this line will throw error if file doesn't exist
         model=tf.keras.models.load_model(FILENAME)
     except:
-
-        print('a')
-        model = "https://tfhub.dev/google/tf2-preview/gnews-swivel-20dim/1"
-        print('b')
-        
-        hub_layer = hub.KerasLayer(model, output_shape=[20], input_shape=[], 
-                                dtype=tf.string, trainable=True)
         print('c')   
 
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
-            hub_layer,
             # learn about the datapoints in relationship to the datapoints that came before it and after it
             # keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
             # 128 neurons, rectified linear unit
@@ -166,7 +142,7 @@ def train(train_data):
         print('e')
 
         # fit model
-        model.fit(train_data, epochs=NUM_EPOCHS)
+        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
         print('f')
         # save model
         model.save(FILENAME)
@@ -179,28 +155,28 @@ def train(train_data):
 
 # checks to see if the model is able to correctly predict the type (spam/ham) of email
 # with un-seen data
-def predict(model, test_data):
+def predict(model, test_emails, test_labels):
     # get accuracy and metrics from model
     # params: test input and output
     # returns loss and accuracy -> wrong vs right
-    test_loss, test_accuracy = model.evaluate(test_data) 
+    test_loss, test_accuracy = model.evaluate(test_emails, test_labels) 
     print("Accuracy", test_accuracy, "\nLoss", test_loss)
 
     # use test data to predict output
-    predictions = model.predict(test_data[:10])
-    # for i in range(5):
-    #     #print prediction and actual
-    #     print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
+    predictions = model.predict(test_emails[:10])
+    for i in range(5):
+        #print prediction and actual
+        print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
 # preprocess data
-train_data, test_data = preprocess()
+train_emails, train_labels, test_emails, test_labels = preprocess()
 
 # train the data
-model = train(train_data)
+model = train(train_emails, train_labels)
 
 
 # test model
-predict(model, test_data)
+predict(model, test_emails, test_labels)
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 

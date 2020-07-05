@@ -1,4 +1,5 @@
 import logging
+import nltk
 
 # logging - debug statements throughout code
 logging.basicConfig(filename='newdebug4.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -29,7 +30,7 @@ def clean_data(train_emails, test_emails):
         # word_list = word_list.split('\n')
         word_list = msg.split('\n')
         word_list = (' '.join([item for item in word_list]))
-        word_list = word_list.split(' ')
+        word_list = nltk.tokenize.word_tokenize(word_list)
 
         logging.debug('after split then join then split: %s' %(word_list[:30]))
 
@@ -59,13 +60,10 @@ def clean_data(train_emails, test_emails):
     # TODO: create bigrams/cfd model 
     # transcripts_bigram = nltk.bigrams(new_train_emails)
     # logging.debug("file bigram: %s" %(transcripts_bigram))
-    # train_emails_cfd = nltk.ConditionalFreqDist(transcripts_bigram)
-    
-    
+    # train_emails = nltk.ConditionalFreqDist(transcripts_bigram)
     
     
     logging.debug('completed training emails')
-
 
 
     #----------------
@@ -112,6 +110,6 @@ def clean_data(train_emails, test_emails):
     # transcripts_bigram = nltk.bigrams(new_test_emails)
     # logging.debug("file bigram: %s" %(transcripts_bigram))
 
-    # test_emails_cfd = nltk.ConditionalFreqDist(transcripts_bigram)
+    # test_emails = nltk.ConditionalFreqDist(transcripts_bigram)
 
     return train_emails, test_emails
