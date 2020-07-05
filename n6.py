@@ -120,17 +120,14 @@ def preprocess():
     # data available as tokenizer's word index property -- dictionary with key as word and value as number
     training_emails = tokenizer.word_index
     # creates sequence of words as numbers
-    train_sequences = tokenizer.texts_to_sequences(train_emails)
+    train_sequences = tokenizer.texts_to_sequences(training_emails)
     train_padded = keras.preprocessing.sequence.pad_sequences(train_sequences)
 
-    print(dict(list(training_emails.items())[0:5]))
-    print(type(train_sequences), type(train_padded))
 
     # tokenizing test data
     tokenizer.fit_on_texts(test_emails)
     testing_emails = tokenizer.word_index
-    print(dict(list(testing_emails.items())[0:5]))
-    test_sequences = tokenizer.texts_to_sequences(test_emails)
+    test_sequences = tokenizer.texts_to_sequences(testing_emails)
     test_padded = keras.preprocessing.sequence.pad_sequences(test_sequences)
 
     train_padded = np.array(train_padded)
@@ -143,43 +140,44 @@ def preprocess():
 
 # ------------ TRAIN -----------------------
 
-def train(train_emails, train_labels):
+def train(train_emails, train_labels, test_emails, test_labels):
     # try to load already saved model
-    try:
-        # this line will throw error if file doesn't exist
-        model=tf.keras.models.load_model(FILENAME)
-    except:
-        print('c')   
+    # try:
+    #     # this line will throw error if file doesn't exist
+    #     model=tf.keras.models.load_model(FILENAME)
+    #     history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, validation_data=(test_emails, test_labels))
+    # except:
+    #     print('c')   
 
-        #create model
-        model = keras.Sequential([ # Sequential means sequence of layers
-            keras.layers.Embedding(vocab_size, embedding_dim),
-            keras.layers.GlobalAveragePooling1D(),
-            tf.keras.layers.Dense(24, activation='relu'),
-            tf.keras.layers.Dense(1, activation='sigmoid')
-            # # 128 neurons, rectified linear unit
-            # keras.layers.Dense(128, activation="relu"),      
-            # # num of output classes, softmax probability dist (softmax = softens max values)
-            # keras.layers.Dense(2, activation="softmax")
-            ])
-        print('d')
+    #create model
+    model = keras.Sequential([ # Sequential means sequence of layers
+        keras.layers.Embedding(vocab_size, embedding_dim),
+        keras.layers.GlobalAveragePooling1D(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(1, activation='softmax')
+        # # 128 neurons, rectified linear unit
+        # keras.layers.Dense(128, activation="relu"),      
+        # # num of output classes, softmax probability dist (softmax = softens max values)
+        # keras.layers.Dense(2, activation="softmax")
+        ])
+    print('d')
 
-        #compile model
-        # model.compile(optimizer="adam", loss="binary_crossentropy",
-        # metrics=["accuracy"])
-        model.compile(optimizer='adam',
-              loss="binary_crossentropy",
-              metrics=['accuracy'])
-        print('e')
+    #compile model
+    # model.compile(optimizer="adam", loss="binary_crossentropy",
+    # metrics=["accuracy"])
+    model.compile(optimizer='adam',
+            loss="binary_crossentropy",
+            metrics=['accuracy'])
+    print('e')
 
-        # fit model
-        model.fit(train_emails, train_labels, epochs=NUM_EPOCHS)
-        print('f')
-        # save model
-        model.save(FILENAME)
-        print('g')
+    # fit model
+    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, validation_data=(test_emails, test_labels))
+    print('f')
+    # save model
+    model.save(FILENAME)
+    print('g')
 
-    return model
+    return (history, model)
 
 
 # -------------- TEST ---------------------
@@ -199,15 +197,46 @@ def predict(model, test_emails, test_labels):
         #print prediction and actual
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
+# ---------- SHOW RESULTS ------------------
+# this function is for visualizing accuracy and loss after each epoch
+def show_results(history):
+    # get array of accuracy values after each epoch for training and testing
+    train_acc = history.history['accuracy']
+    test_acc = history.history['val_accuracy']
+
+    # get array of loss values after each epoch for training and testing
+    train_loss=history.history['loss']
+    test_loss=history.history['val_loss']
+
+    print("Final Train Accuracy:", train_acc[-1])
+    print("Final Test Accuracy:", test_acc[-1])
+
+    # generate an array for they x axis values
+    epochs_range = range(NUM_EPOCHS)
+
+    # plot accuracy
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs_range, train_acc, label='Train Accuracy')
+    plt.plot(epochs_range, test_acc, label='Test Accuracy')
+    plt.legend(loc='lower right')
+    plt.title('Train and Test Accuracy')
+    # plot loss
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs_range, train_loss, label='Train Loss')
+    plt.plot(epochs_range, test_loss, label='Test Loss')
+    plt.legend(loc='upper right')
+    plt.title('Train and Test Loss')
+    plt.show()
+
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
 
 # train the data
-model = train(train_emails, train_labels)
-
+history, model = train(train_emails, train_labels, test_emails, test_labels)
 
 # test model
-predict(model, test_emails, test_labels)
+show_results(history)
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 
