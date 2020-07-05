@@ -38,7 +38,6 @@ BATCHSIZE = 200
 FILENAME = "file_busters_model.h5"
 vocab_size = 25000
 embedding_dim = 16
-max_length = 100
 
 # # used in preprocess() -- returns file and label
 # # labels: 0 = ham -- 1 = spam
@@ -92,18 +91,18 @@ def preprocess():
     test_email_labels = []
     #train_labels 
     for x in range(0, trainHam):
-        train_email_labels.append("ham")
+        train_email_labels.append(1)
         
 
     for x in range(0, trainSpam):
-        train_email_labels.append("spam") 
+        train_email_labels.append(0) 
 
     #test_labels 
     for x in range(0, testHam):
-        test_email_labels.append("ham")
+        test_email_labels.append(1)
 
     for x in range(0, testSpam):
-        test_email_labels.append("spam")   
+        test_email_labels.append(0)   
 
     # data as arrays -- lists unsupported by tf
     # train_emails = np.asarray(train_emails)
@@ -135,9 +134,9 @@ def preprocess():
     test_padded = keras.preprocessing.sequence.pad_sequences(test_sequences)
 
     train_padded = np.array(train_padded)
-    train_labels = np.array(train_email_labels)
+    train_email_labels = np.array(train_email_labels)
     test_padded = np.array(test_padded)
-    test_labels = np.array(test_email_labels)
+    test_email_labels = np.array(test_email_labels)
 
     return train_padded, train_email_labels, test_padded, test_email_labels
 
@@ -154,13 +153,14 @@ def train(train_emails, train_labels):
 
         #create model
         model = keras.Sequential([ # Sequential means sequence of layers
-            keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
+            keras.layers.Embedding(vocab_size, embedding_dim),
             keras.layers.GlobalAveragePooling1D(),
-            # 128 neurons, rectified linear unit
-            keras.layers.Dense(128, activation="relu"),      
-
-            # num of output classes, softmax probability dist (softmax = softens max values)
-            keras.layers.Dense(2, activation="softmax")
+            tf.keras.layers.Dense(24, activation='relu'),
+            tf.keras.layers.Dense(1, activation='sigmoid')
+            # # 128 neurons, rectified linear unit
+            # keras.layers.Dense(128, activation="relu"),      
+            # # num of output classes, softmax probability dist (softmax = softens max values)
+            # keras.layers.Dense(2, activation="softmax")
             ])
         print('d')
 
