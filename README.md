@@ -18,16 +18,16 @@ Chrome
 
 <h3>Files and What They Do</h3>
   <h5>Extension Files</h5>
-  manifest.json - required manifest for extensions
-  content.js - JavaScript file of script that runs when active page loads
-  background.js - JavaScript file of script that runs in background when browser opens
-    <br></br>
+  manifest.json - required manifest for extensions<br></br>
+  content.js - JavaScript file of script that runs when active page loads<br></br>
+  background.js - JavaScript file of script that runs in background when browser opens<br></br>
+    <br></br><br></br>
   <h5>Neural Network Python Files</h5>
-  n6.py - the neural network code
-  nn.py - the original neural network (not used)
-  file_busters_model.h5 - the neural network model as an h5 file
-  files.py - wrote the original emails to text files after data cleaning
-  clean.py - cleans data
-  email_files folder - contains the cleaned text files of ham and spam emails
+  n6.py - the neural network code<br></br>
+  nn.py - the original neural network (not used)<br></br>
+  file_busters_model.h5 - the neural network model as an h5 file<br></br>
+  files.py - wrote the original emails to text files after data cleaning<br></br>
+  clean.py - cleans data<br></br>
+  email_files folder - contains the cleaned text files of ham and spam emails<br></br>
 
 <h3>Known Errors: </h3>
