@@ -33,16 +33,14 @@ if gpus:
 
 # CONSTANT VARIABLES
 
-NUM_EPOCHS = 5
-BATCHSIZE = 200
+NUM_EPOCHS = 10
+BATCHSIZE = 40
 FILENAME = "file_busters_model.h5"
 vocab_size = 25000
 embedding_dim = 16
+training_size = 899
+testing_size = 2151
 
-# # used in preprocess() -- returns file and label
-# # labels: 0 = ham -- 1 = spam
-# def labeler(example, index):
-#         return example, tf.cast(index, tf.int64)  
 
 # ------------- PREPROCESS/CLEAN DATA -------------------
 
@@ -130,12 +128,15 @@ def preprocess():
     test_sequences = tokenizer.texts_to_sequences(testing_emails)
     test_padded = keras.preprocessing.sequence.pad_sequences(test_sequences)
 
+    # values as numpy arrays
     train_padded = np.array(train_padded)
     train_email_labels = np.array(train_email_labels)
     test_padded = np.array(test_padded)
     test_email_labels = np.array(test_email_labels)
 
-    return train_padded, train_email_labels, test_padded, test_email_labels
+    print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
+
+    return train_padded[:training_size], train_email_labels[:training_size], test_padded[:testing_size], test_email_labels[:testing_size]
 
 
 # ------------ TRAIN -----------------------
@@ -233,7 +234,7 @@ def show_results(history):
 train_emails, train_labels, test_emails, test_labels = preprocess()
 
 # train the data
-history, model = train(train_emails, train_labels, test_emails, test_labels)
+history, model = train( test_emails, test_labels, train_emails, train_labels)
 
 # test model
 show_results(history)
