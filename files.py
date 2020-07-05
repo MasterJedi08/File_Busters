@@ -77,16 +77,16 @@ new_ham, new_spam= clean.clean_data(ham, spam)
 new_ham_location = "C:\\Users\\Student\\Desktop\\email_files\\ham"
 new_spam_location = "C:\\Users\\Student\\Desktop\\email_files\\spam"
 
-# count = 1
-# for script in new_ham:
-#     filename = str(count) + '.txt'
-#     print(filename, type(filename))
-#     filename = new_ham_location + '\\' + filename
-#     print(filename, type(filename))
-#     script_file = open(filename, "w", encoding='utf-8')
-#     script_file.write(script)
-#     script_file.close()
-#     count += 1
+count = 1
+for script in new_ham:
+    filename = str(count) + '.txt'
+    print(filename, type(filename))
+    filename = new_ham_location + '\\' + filename
+    print(filename, type(filename))
+    script_file = open(filename, "w", encoding='utf-8')
+    script_file.write(script)
+    script_file.close()
+    count += 1
 
 s_count = 1
 for script in new_spam:
