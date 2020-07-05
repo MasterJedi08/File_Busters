@@ -1,0 +1,24 @@
+I make these for myself, you may find them of interest. See the .spec file(s) for info.
+
+http://www.dudex.net/rpms/gtk2-engines-compat-1.0-aap1.noarch.rpm
+http://www.dudex.net/rpms/gtk2-engines-compat-1.0.spec
+
+http://www.dudex.net/rpms/gtk1+2-themez-1.1-aap1.noarch.rpm
+http://www.dudex.net/rpms/gtk1+2-themez-1.1.spec
+
+You'll need gtk-engines, gtk2-engines, and a "thinice" engine for gtk2, this one
+might be a old now but it works:
+
+http://www.dudex.net/rpms/gtk2-thinice-engine-2.0.1-2.i386.rpm
+http://www.dudex.net/rpms/gtk2-thinice-engine-2.0.1-2.src.rpm
+http://www.dudex.net/rpms/gtk2-thinice-engine-2.0.1.spec
+
+--
+That's "angle" as in geometry.
+
+
+
+
+_______________________________________________
+Limbo-list mailing list
+Limbo-list@redhat.com
