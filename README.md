@@ -3,7 +3,7 @@ AcademyNEXT 2020 - File_Busters Chrome extension
 
 <h3>What is it? </h3>
 Source code for the Chrome extension File_Busters
-<br>File_Busters scans open emails and detects any content that could potentially be spam
+<br>File_Busters, as previously mentioned, is a web extension that can be downloaded through the Google Chrome Web Store. This extension is able to scan open emails and detect any content that could potentially be spam. In order to optimize the detection of spam email through this extension, this team trained a neural network to predict the authenticity of emails and used the resulting model to construct a user-friendly chrome extension.
 
 <h3>Project Contributors: </h3>
 Github users: 
