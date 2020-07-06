@@ -26,8 +26,8 @@ Chrome
   n6.py - the neural network code<br></br>
   nn.py - the original neural network (not used)<br></br>
   file_busters_model.h5 - the neural network model as an h5 file<br></br>
-  files.py - wrote the original emails to text files after data cleaning<br></br>
-  clean.py - cleans data<br></br>
+  files.py - wrote the original emails to text files after data cleaning (dependent on clean.py)<br></br>
+  clean.py - cleans data (works with files.py)<br></br>
   email_files folder - contains the cleaned text files of ham and spam emails<br></br>
 
 <h3>Known Errors: </h3>
