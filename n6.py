@@ -32,8 +32,8 @@ if gpus:
 
 # CONSTANT VARIABLES
 
-NUM_EPOCHS = 10
-BATCHSIZE = 40
+NUM_EPOCHS = 7
+BATCHSIZE = 400
 FILENAME = "file_busters_model.h5"
 vocab_size = 25000
 embedding_dim = 16
@@ -163,7 +163,7 @@ def train(train_emails, train_labels, test_emails, test_labels):
         keras.layers.Embedding(vocab_size, embedding_dim),
         keras.layers.GlobalAveragePooling1D(),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(1, activation='softmax')
+        tf.keras.layers.Dense(1, activation='sigmoid')
         # # 128 neurons, rectified linear unit
         # keras.layers.Dense(128, activation="relu"),      
         # # num of output classes, softmax probability dist (softmax = softens max values)
