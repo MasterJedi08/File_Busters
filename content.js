@@ -10,6 +10,8 @@
 //     alert(message.txt);
 // } 
 
+// TODO: on click of the extension button << grayscale logo when not active color when active??
+
 // TODO: get current tab 
 
 // TODO: check if single email is open
@@ -18,7 +20,7 @@
 
 // TODO: pass message id to gmail api to get email data
 
-// TODO: NN determines ham or spam
+// TODO: NN determines ham or spam  
 
 // TODO: if spam >> alert user of spam (bright red warning sign)
 

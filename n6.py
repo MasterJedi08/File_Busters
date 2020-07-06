@@ -4,15 +4,10 @@
 #necessary import statements to run this program
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow_hub as hub
 # from tensorflow.keras.preprocessing.text import Tokenizer
 import matplotlib.pyplot as plt 
 import numpy as np
-import pandas as pd
 import os
-import email
-import email.policy
-from bs4 import BeautifulSoup
 import logging
 
 logging.disable()
@@ -32,14 +27,24 @@ if gpus:
 
 # CONSTANT VARIABLES
 
-NUM_EPOCHS = 7
-BATCHSIZE = 400
-FILENAME = "file_busters_model.h5"
-vocab_size = 25000
-embedding_dim = 16
-training_size = 899
-testing_size = 2151
+inputs = []
 
+for i in range(1-26):#epochs
+    for j in range(250 - 751):
+        for k in range(16-513):#neurons
+            inputs.append([i,j,k])
+
+# NUM_EPOCHS = 7
+# BATCHSIZE = 400
+activation_string = 'sigmoid'
+# neurons = 128
+vocab_size = 25000
+
+FILENAME = "file_busters_model.h5" 
+embedding_dim = 16
+
+activation_string_list = ['elu', 'exponential', 'hard_sigmoid', 'linear', 'relu', 'selu',
+    'sigmoid', 'softmax', 'softplus', 'softsign']
 
 # ------------- PREPROCESS/CLEAN DATA -------------------
 
@@ -137,17 +142,13 @@ def preprocess():
     test_padded = np.array(test_padded)
     test_email_labels = np.array(test_email_labels)
 
-    print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
-    print('training: ', len(train_padded), len(train_email_labels), ' testing: ', len(test_padded), len(test_email_labels))
-
-
     # returns padded training/testing data & labels (all of the same size)
     return train_padded, train_email_labels, test_padded, test_email_labels
 
 
 # ------------ TRAIN -----------------------
 
-def train(train_emails, train_labels, test_emails, test_labels):
+def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATCHSIZE, neurons):
     # below try/except statement is commented out so we could continuously optimize our model
 
     # try to load already saved model
@@ -162,9 +163,9 @@ def train(train_emails, train_labels, test_emails, test_labels):
     model = keras.Sequential([ # Sequential means sequence of layers
         keras.layers.Embedding(vocab_size, embedding_dim),
         keras.layers.GlobalAveragePooling1D(),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(1, activation='sigmoid')
-        # # 128 neurons, rectified linear unit
+        # 128 neurons, rectified linear unit
+        tf.keras.layers.Dense(neurons, activation='relu'),
+        tf.keras.layers.Dense(1, activation=activation_string)        
         # keras.layers.Dense(128, activation="relu"),      
         # # num of output classes, softmax probability dist (softmax = softens max values)
         # keras.layers.Dense(2, activation="softmax")
@@ -180,7 +181,7 @@ def train(train_emails, train_labels, test_emails, test_labels):
     print('e')
 
     # fit model and save results as history
-    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, validation_data=(test_emails, test_labels))
+    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE ,validation_data=(test_emails, test_labels))
     print('f')
     # save model
     model.save(FILENAME)
@@ -209,7 +210,7 @@ def predict(model, test_emails, test_labels):
 # ---------- SHOW RESULTS ------------------
 
 # this function is for visualizing accuracy and loss after each epoch
-def show_results(history):
+def show_results(history, NUM_EPOCHS):
     # get array of accuracy values after each epoch for training and testing
     train_acc = history.history['accuracy']
     test_acc = history.history['val_accuracy']
@@ -221,32 +222,62 @@ def show_results(history):
     print("Final Train Accuracy:", train_acc[-1])
     print("Final Test Accuracy:", test_acc[-1])
 
-    # generate an array for they x axis values
-    epochs_range = range(NUM_EPOCHS)
+    return test_acc[-1], train_acc[-1], train_loss[-1], test_loss[-1]
 
-    # plot accuracy
-    plt.figure(figsize=(12, 6))
-    plt.subplot(1, 2, 1)
-    plt.plot(epochs_range, train_acc, label='Train Accuracy')
-    plt.plot(epochs_range, test_acc, label='Test Accuracy')
-    plt.legend(loc='lower right')
-    plt.title('Train and Test Accuracy')
-    # plot loss
-    plt.subplot(1, 2, 2)
-    plt.plot(epochs_range, train_loss, label='Train Loss')
-    plt.plot(epochs_range, test_loss, label='Test Loss')
-    plt.legend(loc='upper right')
-    plt.title('Train and Test Loss')
-    plt.show()
+    # # generate an array for they x axis values
+    # epochs_range = range(NUM_EPOCHS)
+
+    # # plot accuracy
+    # plt.figure(figsize=(12, 6))
+    # plt.subplot(1, 2, 1)
+    # plt.plot(epochs_range, train_acc, label='Train Accuracy')
+    # plt.plot(epochs_range, test_acc, label='Test Accuracy')
+    # plt.legend(loc='lower right')
+    # plt.title('Train and Test Accuracy')
+    # # plot loss
+    # plt.subplot(1, 2, 2)
+    # plt.plot(epochs_range, train_loss, label='Train Loss')
+    # plt.plot(epochs_range, test_loss, label='Test Loss')
+    # plt.legend(loc='upper right')
+    # plt.title('Train and Test Loss')
+    # plt.show()
 
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
 
-# train the data
-history, model = train( test_emails, test_labels, train_emails, train_labels)
+inputs = []
 
-# test model
-show_results(history)
+for i in range(1, 25):#epochs
+    for j in range(250, 750, 10):
+        for k in range(16, 512, 16):#neurons
+            inputs.append([i,j,k])
+
+# for i in range(5, 7):#epochs
+#     for j in range(500, 502):
+#         for k in range(128, 134):#neurons
+#             inputs.append([i,j,k])
+
+print(len(inputs))
+
+# # train the data
+# history, model = train(test_emails, test_labels, train_emails, train_labels)
+
+# # test model
+# show_results(history)
+
+end_results = []
+
+for a in range(len(inputs)):
+        
+    # train the data
+    history, model = train(test_emails, test_labels, train_emails, train_labels, inputs[a][0], inputs[a][1], inputs[a][2])
+
+    # test model
+    test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])
+
+    end_results.append([test_acc, test_loss])
+
+print(end_results)
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 
