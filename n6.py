@@ -47,8 +47,8 @@ def preprocess():
     ham_location = "C:\\Users\\Student\\Desktop\\email_files\\ham"
     spam_location = "C:\\Users\\Student\\Desktop\\email_files\\spam"
 
-    numTrainHam = round(500*0.8)
-    numTrainSpam = round(2550*0.8)
+    numTrainSpam = round(500)
+    numTrainHam = round(500)
     train_emails = []
     test_emails = []
     trainHam = 0
@@ -69,7 +69,7 @@ def preprocess():
         else:
             test_emails.append(content)
             testHam+=1
-
+    # print(train_emails[0])
     # open spam email text file and add to spam test or train list
     for i in range(1, 501):
         filename = str(i) + '.txt'
@@ -115,16 +115,20 @@ def preprocess():
     # fits tokenizer to data
     tokenizer.fit_on_texts(train_emails)
     # data available as tokenizer's word index property -- dictionary with key as word and value as number
-    training_emails = tokenizer.word_index
+    # training_emails = tokenizer.word_index
+    # print(training_emails)
+    # print(training_emails.values())
     # creates sequence of words as numbers
-    train_sequences = tokenizer.texts_to_sequences(training_emails)
+    train_sequences = tokenizer.texts_to_sequences(train_emails)
+    # print(train_sequences[:11])
     train_padded = keras.preprocessing.sequence.pad_sequences(train_sequences)
+   # print(train_padded[1000:1030])
 
 
     # tokenizing test data
     tokenizer.fit_on_texts(test_emails)
-    testing_emails = tokenizer.word_index
-    test_sequences = tokenizer.texts_to_sequences(testing_emails)
+    # testing_emails = tokenizer.word_index
+    test_sequences = tokenizer.texts_to_sequences(test_emails)
     test_padded = keras.preprocessing.sequence.pad_sequences(test_sequences)
 
     # values as numpy arrays
@@ -133,10 +137,12 @@ def preprocess():
     test_padded = np.array(test_padded)
     test_email_labels = np.array(test_email_labels)
 
-    # print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
+    print('training: ', len(train_padded[:training_size]), len(train_email_labels[:training_size]), ' testing: ', len(test_padded[:testing_size]), len(test_email_labels[:testing_size]))
+    print('training: ', len(train_padded), len(train_email_labels), ' testing: ', len(test_padded), len(test_email_labels))
+
 
     # returns padded training/testing data & labels (all of the same size)
-    return train_padded[:training_size], train_email_labels[:training_size], test_padded[:testing_size], test_email_labels[:testing_size]
+    return train_padded, train_email_labels, test_padded, test_email_labels
 
 
 # ------------ TRAIN -----------------------
