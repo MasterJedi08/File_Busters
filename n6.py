@@ -14,7 +14,6 @@ import email
 import email.policy
 from bs4 import BeautifulSoup
 import logging
-import clean
 
 logging.disable()
 

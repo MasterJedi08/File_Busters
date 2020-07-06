@@ -18,7 +18,7 @@ import clean
 logging.basicConfig(filename='newdebug4.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug('Start of program')
 # disables all logging statements after this line
-# logging.disable()
+logging.disable()
 
 # CONSTANT VARIABLES
 NUM_EPOCHS = 5
