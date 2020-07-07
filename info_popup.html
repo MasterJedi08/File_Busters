@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <script type="text/javascript" src="content.js"></script>
 </head>
 <body>
     <h4>Thanks for choosing File Busters!</h4>
     <p>Open an email in Gmail and click the button below to search for potential spam</p>
+    <form>
+        <label for="myInput">Enter your email address: </label>
+        <input type="text" id="myInput" /><br /><br />
+        <input type="button" value="Submit" onclick="input_email(myInput.value);" />
+      </form>
+    <!--get user input -- user email-->
     <button id="main_button">Search for Spam</button> 
-    <script src="content.js" charset="utf-8"></script>
+
+    <!-- <script src="content.js" charset="utf-8"> -->
+
+    <!-- <script type="text/javascript" charset="utf-8">
+        function checkPswd(){
+            alert("hello");
+        }
+    </script> -->
 </body>
 </html>

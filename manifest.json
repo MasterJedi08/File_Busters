@@ -5,7 +5,7 @@
     "description": "Spam email detector",
     "content_scripts" : [
         {
-            "matches" : ["<all_urls>"],
+            "matches" : ["https://mail.google.com/*"],
             "js" : ["content.js"]
         }
     ],

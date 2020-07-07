@@ -245,17 +245,46 @@ def show_results(history, NUM_EPOCHS):
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
 
+
+import random
+
+# randomizinglist = []
+# randomizingindex = []
+
+# print(train_emails[:11], train_labels[:10])
+# print(len(train_emails))
+# for i in range(0,len(train_emails)):
+#     randomindex = random.randint(0,450)
+#     print(randomindex)
+
+#     randomizinglist.insert(randomindex,train_emails[i])
+#     randomizingindex.insert(randomindex,train_labels[i])
+ 
+# train_emails = randomizinglist
+# train_labels = randomizingindex
+# print(train_emails[:11], train_labels[:10])
+# print(len(train_emails))
+
+# randomizinglist_test = []
+# randomizingindex_test = []
+
+# for i in range(0,len(test_emails)):
+#     randomindex = random.randint(0,450)
+
+#     randomizinglist.insert(randomindex,test_emails[i])
+#     randomizingindex.insert(randomindex,test_labels[i])
+ 
+# test_emails = randomizinglist_test
+# test_labels = randomizingindex_test
+
+
 inputs = []
 
-for i in range(7, 25):#epochs
-    for j in range(250, 760, 10):#batchsize
-        for k in range(64, 513, 16):#neurons
+for i in range(7, 13):#epochs
+    for j in range(250, 560, 10):#batchsize
+        for k in range(128, 513, 16):#neurons
             inputs.append([i,j,k])
 
-# for i in range(1, 2):#epochs
-#     for j in range(500, 502):
-#         for k in range(128, 134):#neurons
-#             inputs.append([i,j,k])
 
 # print(len(inputs))
 
@@ -267,7 +296,7 @@ for i in range(7, 25):#epochs
 
 end_results = []
 final_params = []
-all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data2.txt'
+all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data3.txt'
 
 for a in range(len(inputs)):
     # train the data
