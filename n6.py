@@ -7,6 +7,7 @@ from tensorflow import keras
 # from tensorflow.keras.preprocessing.text import Tokenizer
 import matplotlib.pyplot as plt 
 import numpy as np
+import pandas as pd
 import os
 import logging
 
@@ -27,19 +28,9 @@ if gpus:
 
 # CONSTANT VARIABLES
 
-inputs = []
-
-for i in range(1-26):#epochs
-    for j in range(250 - 751):
-        for k in range(16-513):#neurons
-            inputs.append([i,j,k])
-
-# NUM_EPOCHS = 7
-# BATCHSIZE = 400
 activation_string = 'sigmoid'
-# neurons = 128
 vocab_size = 25000
-
+SHUFFLE_BUFFER_SIZE = 100
 FILENAME = "file_busters_model.h5" 
 embedding_dim = 16
 
@@ -148,7 +139,7 @@ def preprocess():
 
 # ------------ TRAIN -----------------------
 
-def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATCHSIZE, neurons):
+def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batchsize, neurons, train_length):
     # below try/except statement is commented out so we could continuously optimize our model
 
     # try to load already saved model
@@ -164,8 +155,8 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATC
         keras.layers.Embedding(vocab_size, embedding_dim, trainable=True),
         keras.layers.GlobalAveragePooling1D(),
         # 128 neurons, rectified linear unit
-        tf.keras.layers.Dense(neurons, activation='relu'),
-        tf.keras.layers.Dense(1, activation=activation_string)        
+        keras.layers.Dense(neurons, activation='relu'),
+        keras.layers.Dense(2, activation=activation_string)        
         # keras.layers.Dense(128, activation="relu"),      
         # # num of output classes, softmax probability dist (softmax = softens max values)
         # keras.layers.Dense(2, activation="softmax")
@@ -176,12 +167,12 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATC
     # model.compile(optimizer="adam", loss="binary_crossentropy",
     # metrics=["accuracy"])
     model.compile(optimizer='adam',
-            loss="binary_crossentropy",
+            loss="sparse_categorical_crossentropy",
             metrics=['accuracy'])
     print('e')
 
     # fit model and save results as history
-    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE, validation_data=(test_emails, test_labels))
+    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=batchsize,validation_data=(test_emails, test_labels))
     print('f')
     # save model
     model.save(FILENAME)
@@ -245,38 +236,38 @@ def show_results(history, NUM_EPOCHS):
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
 
+train_length = len(train_emails)
 
-import random
+# data as pd dataset and shuffled
+# train_dataset = tf.data.Dataset.from_tensor_slices((train_emails, train_labels))
+# test_dataset = tf.data.Dataset.from_tensor_slices((test_emails, test_labels))
+# train_df = pd.DataFrame(columns=["emails", "labels"])
+# train_df['emails'] = train_emails.tolist()
+# train_df['labels'] = train_labels.tolist()
 
-# randomizinglist = []
-# randomizingindex = []
+# test_df = pd.DataFrame(columns=["emails", "labels"])
+# train_df['emails'] = train_emails.tolist()
+# train_df['labels'] = train_labels.tolist()
 
-# print(train_emails[:11], train_labels[:10])
-# print(len(train_emails))
-# for i in range(0,len(train_emails)):
-#     randomindex = random.randint(0,450)
-#     print(randomindex)
+# train_df = np.random.shuffle(train_df.values)
+# test_df = np.random.shuffle(test_df.values)
 
-#     randomizinglist.insert(randomindex,train_emails[i])
-#     randomizingindex.insert(randomindex,train_labels[i])
- 
-# train_emails = randomizinglist
-# train_labels = randomizingindex
-# print(train_emails[:11], train_labels[:10])
-# print(len(train_emails))
+# # train_emails = train_df.shuffle(SHUFFLE_BUFFER_SIZE)
+# # test_emails = test_df.shuffle(SHUFFLE_BUFFER_SIZE)
 
-# randomizinglist_test = []
-# randomizingindex_test = []
+# print(train_df, '\n', type(train_df))
 
-# for i in range(0,len(test_emails)):
-#     randomindex = random.randint(0,450)
+randomize = np.arange(len(train_emails))
+np.random.shuffle(randomize)
+train_emails = train_emails[randomize]
+train_labels = train_labels[randomize]
 
-#     randomizinglist.insert(randomindex,test_emails[i])
-#     randomizingindex.insert(randomindex,test_labels[i])
- 
-# test_emails = randomizinglist_test
-# test_labels = randomizingindex_test
+randomize_test = np.arange(len(test_emails))
+np.random.shuffle(randomize_test)
+test_emails = test_emails[randomize_test]
+test_labels = test_labels[randomize_test]
 
+print(type(train_emails), train_emails)
 
 inputs = []
 
@@ -300,7 +291,7 @@ all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data3.txt'
 
 for a in range(len(inputs)):
     # train the data
-    history, model = train(test_emails, test_labels, train_emails, train_labels, inputs[a][0], inputs[a][1], inputs[a][2])
+    history, model = train(test_emails, test_labels, train_emails, train_labels, inputs[a][0], inputs[a][1],inputs[a][2], train_length)
 
     # test model
     test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])

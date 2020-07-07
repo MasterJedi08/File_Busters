@@ -1,0 +1,3 @@
+Input variables Run 0: Epochs:7 BatchSize:250 Neurons: 128 Accuracy:0.5 Loss:0.2931102077979558
+Input variables Run 1: Epochs:7 BatchSize:250 Neurons: 144 Accuracy:0.5 Loss:0.24783785514838513
+Input variables Run 2: Epochs:7 BatchSize:250 Neurons: 160 Accuracy:0.5 Loss:0.27069315866187765
