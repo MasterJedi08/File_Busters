@@ -181,7 +181,7 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATC
     print('e')
 
     # fit model and save results as history
-    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE ,validation_data=(test_emails, test_labels))
+    history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=BATCHSIZE, validation_data=(test_emails, test_labels))
     print('f')
     # save model
     model.save(FILENAME)
@@ -248,7 +248,7 @@ train_emails, train_labels, test_emails, test_labels = preprocess()
 inputs = []
 
 for i in range(7, 25):#epochs
-    for j in range(250, 760, 10):
+    for j in range(250, 760, 10):#batchsize
         for k in range(64, 513, 16):#neurons
             inputs.append([i,j,k])
 
