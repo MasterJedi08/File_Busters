@@ -1,5 +1,5 @@
 {
-    "name" : "trial extension",
+    "name" : "File Busters",
     "version" : "1.0",
     "manifest_version" : 2,
     "description": "Spam email detector",
@@ -12,9 +12,15 @@
     "background": { 
         "scripts" : ["background.js"]
     },
-    "permissions": [ "activeTab" ],
-    "browser-action": {
+    "browser_action": {
+        "default_popup": "info_popup.html",
         "default_icon": "tempGhost.png"
-    } 
-    }
+    },
+    "permissions": [ "activeTab" ],
+    "icons": { 
+        "16": "tempGhost.png",
+        "48": "tempGhost.png",
+       "128": "tempGhost.png" }
+       
+}
     

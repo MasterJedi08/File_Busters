@@ -161,7 +161,7 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, BATC
 
     #create model
     model = keras.Sequential([ # Sequential means sequence of layers
-        keras.layers.Embedding(vocab_size, embedding_dim),
+        keras.layers.Embedding(vocab_size, embedding_dim, trainable=True),
         keras.layers.GlobalAveragePooling1D(),
         # 128 neurons, rectified linear unit
         tf.keras.layers.Dense(neurons, activation='relu'),
@@ -247,17 +247,17 @@ train_emails, train_labels, test_emails, test_labels = preprocess()
 
 inputs = []
 
-for i in range(1, 25):#epochs
-    for j in range(250, 750, 10):
-        for k in range(16, 512, 16):#neurons
+for i in range(7, 25):#epochs
+    for j in range(250, 760, 10):
+        for k in range(64, 513, 16):#neurons
             inputs.append([i,j,k])
 
-# for i in range(5, 7):#epochs
+# for i in range(1, 2):#epochs
 #     for j in range(500, 502):
 #         for k in range(128, 134):#neurons
 #             inputs.append([i,j,k])
 
-print(len(inputs))
+# print(len(inputs))
 
 # # train the data
 # history, model = train(test_emails, test_labels, train_emails, train_labels)
@@ -266,18 +266,37 @@ print(len(inputs))
 # show_results(history)
 
 end_results = []
+final_params = []
+all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data2.txt'
 
 for a in range(len(inputs)):
-        
     # train the data
     history, model = train(test_emails, test_labels, train_emails, train_labels, inputs[a][0], inputs[a][1], inputs[a][2])
 
     # test model
     test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])
 
-    end_results.append([test_acc, test_loss])
+    script = 'Input variables Run ' + str(a) + ': Epochs:' + str(inputs[a][0]) + ' BatchSize:' + str(inputs[a][1]) + ' Neurons: ' + str(inputs[a][2]) + ' Accuracy:' + str(test_acc) + ' Loss:' + str(test_loss) + '\n'
+    
+    all_data_file = open(all_data_filename, "a", encoding='utf-8')
+    all_data_file.write(script)
+    all_data_file.close()
+
+    if a == 0:
+        end_results.append([test_acc, test_loss])
+
+    acc = float(test_acc)
+    loss = float(test_loss)
+    prev_acc = float(end_results[0][0])
+    prev_loss = float(end_results[0][1])
+
+    if acc > prev_acc and loss < prev_loss:
+        final_params[0] = [acc, loss]
+        final_params.remove(final_params[2])
+        final_params.append(inputs[a])
 
 print(end_results)
+print(final_params)
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 
