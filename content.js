@@ -5,23 +5,17 @@
 // NOTE 2: popup is html file!!
 
 // TODO: on click of the extension button << grayscale logo when not active color when active??
-
-// TODO: get current tab 
-// nvm
-
-// TODO: check if single email is open ??
+// calls in from info-popup.html file
 
 // TODO: get email address
-function input_email(address_input){
-    let email_address = address_input;
-}
 
 // TODO: if email open >> fetch message id from html elements
 // let messageId = document.getElementById("");
-let messageId = document.querySelector('[data-message-id]').getAttribute('data-legacy-message-id')
+let messageId = document.querySelector('[data-message-id]').getAttribute('data-legacy-message-id');
+console.log(messageId);
 
 // TODO: pass message id to gmail api to get email data 
-getMessage(email_address, messageId, nn_js())
+getMessage('me', messageId, nn_js());
 
 /**
  * Get Message with given ID.
@@ -42,6 +36,7 @@ function getMessage(userId, messageId, callback) {
 // TODO: NN determines ham or spam  
 function nn_js(){
     //call neural net with message
+    alert("in progress");
 }
 
 
