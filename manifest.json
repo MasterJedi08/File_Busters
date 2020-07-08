@@ -28,11 +28,11 @@
   },
   "browser_action": {
       "default_popup": "info_popup.html",
-      "default_icon": "tempGhost.png"
+      "default_icon": "fbicon.png"
   },
   
   "icons": { 
-      "16": "tempGhost.png",
-      "48": "tempGhost.png",
-      "128": "tempGhost.png" }
+      "16": "fbicon.png",
+      "48": "fbicon.png",
+      "128": "fbicon.png" }
 }
