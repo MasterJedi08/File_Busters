@@ -32,7 +32,7 @@ activation_string = 'sigmoid'
 vocab_size = 25000
 SHUFFLE_BUFFER_SIZE = 100
 FILENAME = "file_busters_model.h5" 
-embedding_dim = 16
+embedding_dim = 64
 
 activation_string_list = ['elu', 'exponential', 'hard_sigmoid', 'linear', 'relu', 'selu',
     'sigmoid', 'softmax', 'softplus', 'softsign']
@@ -43,8 +43,8 @@ def preprocess():
     ham_location = "C:\\Users\\Student\\Desktop\\email_files\\ham"
     spam_location = "C:\\Users\\Student\\Desktop\\email_files\\spam"
 
-    numTrainSpam = round(500)
-    numTrainHam = round(500)
+    numTrainSpam = round(0.8*500)
+    numTrainHam = round(2550*0.8)
     train_emails = []
     test_emails = []
     trainHam = 0
@@ -97,12 +97,6 @@ def preprocess():
     for x in range(0, testSpam):
         test_email_labels.append(0)   
 
-    # data as arrays -- lists unsupported by tf
-    # train_emails = np.asarray(train_emails)
-    # test_emails = np.asarray(test_emails)
-    # train_email_labels = np.asarray(train_email_labels)
-    # test_email_labels = np.asarray(test_email_labels)
-
     # tokenizing training data
 
     # create a tokenizer object 
@@ -110,10 +104,6 @@ def preprocess():
     tokenizer = keras.preprocessing.text.Tokenizer(num_words = 25000, oov_token='<OOV>')
     # fits tokenizer to data
     tokenizer.fit_on_texts(train_emails)
-    # data available as tokenizer's word index property -- dictionary with key as word and value as number
-    # training_emails = tokenizer.word_index
-    # print(training_emails)
-    # print(training_emails.values())
     # creates sequence of words as numbers
     train_sequences = tokenizer.texts_to_sequences(train_emails)
     # print(train_sequences[:11])
@@ -152,31 +142,37 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batc
 
     #create model
     model = keras.Sequential([ # Sequential means sequence of layers
+        
         keras.layers.Embedding(vocab_size, embedding_dim, trainable=True),
         keras.layers.GlobalAveragePooling1D(),
+        tf.keras.layers.Dropout(0.2) ,
         # 128 neurons, rectified linear unit
         keras.layers.Dense(neurons, activation='relu'),
-        keras.layers.Dense(2, activation=activation_string)        
+        keras.layers.Dense(2, activation=activation_string),
+               
         # keras.layers.Dense(128, activation="relu"),      
         # # num of output classes, softmax probability dist (softmax = softens max values)
         # keras.layers.Dense(2, activation="softmax")
         ])
-    print('d')
 
     #compile model
     # model.compile(optimizer="adam", loss="binary_crossentropy",
     # metrics=["accuracy"])
-    model.compile(optimizer='adam',
+
+    # got changing accuracy w/ lr=0.0001
+
+    opt = keras.optimizers.SGD(lr=0.0005)
+
+    model.compile(optimizer=opt,
             loss="sparse_categorical_crossentropy",
             metrics=['accuracy'])
-    print('e')
 
     # fit model and save results as history
     history = model.fit(train_emails, train_labels, epochs=NUM_EPOCHS, batch_size=batchsize,validation_data=(test_emails, test_labels))
-    print('f')
+
+    print(model.summary())
     # save model
     model.save(FILENAME)
-    print('g')
 
     return (history, model)
 
@@ -238,25 +234,6 @@ train_emails, train_labels, test_emails, test_labels = preprocess()
 
 train_length = len(train_emails)
 
-# data as pd dataset and shuffled
-# train_dataset = tf.data.Dataset.from_tensor_slices((train_emails, train_labels))
-# test_dataset = tf.data.Dataset.from_tensor_slices((test_emails, test_labels))
-# train_df = pd.DataFrame(columns=["emails", "labels"])
-# train_df['emails'] = train_emails.tolist()
-# train_df['labels'] = train_labels.tolist()
-
-# test_df = pd.DataFrame(columns=["emails", "labels"])
-# train_df['emails'] = train_emails.tolist()
-# train_df['labels'] = train_labels.tolist()
-
-# train_df = np.random.shuffle(train_df.values)
-# test_df = np.random.shuffle(test_df.values)
-
-# # train_emails = train_df.shuffle(SHUFFLE_BUFFER_SIZE)
-# # test_emails = test_df.shuffle(SHUFFLE_BUFFER_SIZE)
-
-# print(train_df, '\n', type(train_df))
-
 randomize = np.arange(len(train_emails))
 np.random.shuffle(randomize)
 train_emails = train_emails[randomize]
@@ -267,17 +244,12 @@ np.random.shuffle(randomize_test)
 test_emails = test_emails[randomize_test]
 test_labels = test_labels[randomize_test]
 
-print(type(train_emails), train_emails)
-
 inputs = []
 
-for i in range(7, 13):#epochs
-    for j in range(250, 560, 10):#batchsize
+for i in range(7, 11):#epochs
+    for j in range(200, 500, 10):#batchsize
         for k in range(128, 513, 16):#neurons
             inputs.append([i,j,k])
-
-
-# print(len(inputs))
 
 # # train the data
 # history, model = train(test_emails, test_labels, train_emails, train_labels)
@@ -291,7 +263,7 @@ all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data3.txt'
 
 for a in range(len(inputs)):
     # train the data
-    history, model = train(test_emails, test_labels, train_emails, train_labels, inputs[a][0], inputs[a][1],inputs[a][2], train_length)
+    history, model = train( train_emails, train_labels, test_emails, test_labels, inputs[a][0], inputs[a][1],inputs[a][2], train_length)
 
     # test model
     test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])
@@ -310,13 +282,11 @@ for a in range(len(inputs)):
     prev_acc = float(end_results[0][0])
     prev_loss = float(end_results[0][1])
 
-    if acc > prev_acc and loss < prev_loss:
-        final_params[0] = [acc, loss]
-        final_params.remove(final_params[2])
-        final_params.append(inputs[a])
+    if acc > prev_acc or loss < prev_loss:
+        final_params.append([inputs[a], acc, loss])
 
 print(end_results)
-print(final_params)
+print(final_params[-1])
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 
