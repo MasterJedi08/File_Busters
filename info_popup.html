@@ -3,29 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-
+<!-- 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script><script lang="js">
     //preprocess
-    function input_email(message) {
-        
+    function input_email() {
+        if (message === 'hello'){
+            // chack if valid email
+            alert("hi")
+        }
+        else {
+            alert("Invalid submission");
+        }
     }
     
     //load model
     doTraining(model).then(() => {
         model.predict(tf.tensor2d([10], [1,1]));
     });
-    </script>
+    </script> -->
 </head>
 <body>
     <h4>Thanks for choosing File Busters!</h4>
     <p>Open an email in Gmail and click the button below to search for potential spam</p>
-    <form>
+
+    <button id = "firstButton" onclick="input_email();">Search for Spam</button>
+    <script type='text/javascript' charset='utf-8'>
+        
+    </script>
+    <!-- <form>
         <label for="myInput">Enter your email address: </label>
         <input type="text" id="myInput" /><br /><br />
         <input type="button" value="Submit" onclick="input_email(myInput.value);" />
-      </form>
+        <input type="button" value="Search for Spam" onclick="input_email(myInput.value);"/> 
+      </form> -->
     <!--get user input -- user email-->
-    <button id="main_button">Search for Spam</button> 
+    
 
     <!-- <script src="content.js" charset="utf-8"> -->
 

@@ -23,9 +23,6 @@
             "js" : ["content.js"]
         }
   ],
-  "background": { 
-      "scripts" : ["background.js"]
-  },
   "browser_action": {
       "default_popup": "info_popup.html",
       "default_icon": "tempGhost.png"
