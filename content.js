@@ -39,6 +39,13 @@ function nn_js(){
     alert("in progress");
 }
 
+// JavaScript
+
+import * as tf from '@tensorflow/tfjs';
+
+const model = await tf.loadLayersModel('https://foo.bar/tfjs_artifacts/model.json');
+
+
 
 // TODO: if spam >> alert user of spam (bright red warning sign)
 

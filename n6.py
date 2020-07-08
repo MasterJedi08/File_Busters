@@ -4,6 +4,7 @@
 #necessary import statements to run this program
 import tensorflow as tf
 from tensorflow import keras
+import tensorflowjs as tfjs
 # from tensorflow.keras.preprocessing.text import Tokenizer
 import matplotlib.pyplot as plt 
 import numpy as np
@@ -172,7 +173,9 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batc
 
     print(model.summary())
     # save model
-    model.save(FILENAME)
+    # model.save(FILENAME)
+    tfjs.converters.save_keras_model(model, tfjs_target_dir)
+
 
     return (history, model)
 
