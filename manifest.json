@@ -1,26 +1,38 @@
 {
-    "name" : "File Busters",
-    "version" : "1.0",
-    "manifest_version" : 2,
-    "description": "Spam email detector",
-    "content_scripts" : [
+  "name": "File Busters",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Spam Email Detection Extension",
+  "permissions": [
+    "identity",
+    "*://*.google.com/*"
+  ],
+  "background": {
+    "scripts": ["base64.js", "background.js"]
+  },
+  "content_security_policy": "script-src https://*.google.com 'unsafe-eval'; object-src 'self'",
+  "oauth2": {
+    "client_id": "<clientid>",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.modify"
+    ]
+  },
+  "content_scripts" : [
         {
             "matches" : ["https://mail.google.com/*"],
             "js" : ["content.js"]
         }
-    ],
-    "background": { 
-        "scripts" : ["background.js"]
-    },
-    "browser_action": {
-        "default_popup": "info_popup.html",
-        "default_icon": "tempGhost.png"
-    },
-    "permissions": [ "activeTab" ],
-    "icons": { 
-        "16": "tempGhost.png",
-        "48": "tempGhost.png",
-       "128": "tempGhost.png" }
-       
+  ],
+  "background": { 
+      "scripts" : ["background.js"]
+  },
+  "browser_action": {
+      "default_popup": "info_popup.html",
+      "default_icon": "tempGhost.png"
+  },
+  
+  "icons": { 
+      "16": "tempGhost.png",
+      "48": "tempGhost.png",
+      "128": "tempGhost.png" }
 }
-    
