@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-  <script type="text/javascript" src="content.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script><script lang="js">
+    //preprocess
+    function input_email(message) {
+        
+    }
+    
+    //load model
+    doTraining(model).then(() => {
+        model.predict(tf.tensor2d([10], [1,1]));
+    });
+    </script>
 </head>
 <body>
     <h4>Thanks for choosing File Busters!</h4>
