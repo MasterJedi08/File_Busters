@@ -129,7 +129,7 @@ def preprocess():
 
 # ------------ TRAIN -----------------------
 
-def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batchsize, neurons, train_length):
+def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batchsize, neurons):
     # below try/except statement is commented out so we could continuously optimize our model
 
     # try to load already saved model
@@ -209,25 +209,26 @@ def show_results(history, NUM_EPOCHS):
     print("Final Train Accuracy:", train_acc[-1])
     print("Final Test Accuracy:", test_acc[-1])
 
+
+    # generate an array for they x axis values
+    epochs_range = range(NUM_EPOCHS)
+ 
+    # plot accuracy
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs_range, train_acc, label='Train Accuracy')
+    plt.plot(epochs_range, test_acc, label='Test Accuracy')
+    plt.legend(loc='lower right')
+    plt.title('Train and Test Accuracy')
+    # plot loss
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs_range, train_loss, label='Train Loss')
+    plt.plot(epochs_range, test_loss, label='Test Loss')
+    plt.legend(loc='upper right')
+    plt.title('Train and Test Loss')
+    plt.show()
+
     return test_acc[-1], train_acc[-1], train_loss[-1], test_loss[-1]
-
-    # # generate an array for they x axis values
-    # epochs_range = range(NUM_EPOCHS)
-
-    # # plot accuracy
-    # plt.figure(figsize=(12, 6))
-    # plt.subplot(1, 2, 1)
-    # plt.plot(epochs_range, train_acc, label='Train Accuracy')
-    # plt.plot(epochs_range, test_acc, label='Test Accuracy')
-    # plt.legend(loc='lower right')
-    # plt.title('Train and Test Accuracy')
-    # # plot loss
-    # plt.subplot(1, 2, 2)
-    # plt.plot(epochs_range, train_loss, label='Train Loss')
-    # plt.plot(epochs_range, test_loss, label='Test Loss')
-    # plt.legend(loc='upper right')
-    # plt.title('Train and Test Loss')
-    # plt.show()
 
 # preprocess data
 train_emails, train_labels, test_emails, test_labels = preprocess()
@@ -244,49 +245,50 @@ np.random.shuffle(randomize_test)
 test_emails = test_emails[randomize_test]
 test_labels = test_labels[randomize_test]
 
-inputs = []
 
-for i in range(7, 11):#epochs
-    for j in range(200, 500, 10):#batchsize
-        for k in range(128, 513, 16):#neurons
-            inputs.append([i,j,k])
+# train the data
+history, model = train(train_emails, train_labels, test_emails, test_labels, 7, 210, 176)
 
-# # train the data
-# history, model = train(test_emails, test_labels, train_emails, train_labels)
 
-# # test model
-# show_results(history)
+# test model
+show_results(history, 7)
 
-end_results = []
-final_params = []
-all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data3.txt'
+# end_results = []
+# final_params = []
+# all_data_filename = 'C:\\Users\\Student\\Desktop\\File_Busters\\all_data3.txt'
+# inputs = []
 
-for a in range(len(inputs)):
-    # train the data
-    history, model = train( train_emails, train_labels, test_emails, test_labels, inputs[a][0], inputs[a][1],inputs[a][2], train_length)
+# for i in range(7, 11):#epochs
+#     for j in range(200, 500, 20):#batchsize
+#         for k in range(128, 513, 16):#neurons
+#             inputs.append([i,j,k])
 
-    # test model
-    test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])
+# for a in range(len(inputs)):
+#     # train the data
+#     history, model = train( train_emails, train_labels, test_emails, test_labels, inputs[a][0], inputs[a][1],inputs[a][2], train_length)
 
-    script = 'Input variables Run ' + str(a) + ': Epochs:' + str(inputs[a][0]) + ' BatchSize:' + str(inputs[a][1]) + ' Neurons: ' + str(inputs[a][2]) + ' Accuracy:' + str(test_acc) + ' Loss:' + str(test_loss) + '\n'
+#     # test model
+#     test_acc, train_acc, test_loss, train_loss = show_results(history, inputs[a][0])
+
+#     script = 'Input variables Run ' + str(a) + ': Epochs:' + str(inputs[a][0]) + ' BatchSize:' + str(inputs[a][1]) + ' Neurons: ' + str(inputs[a][2]) + ' Accuracy:' + str(test_acc) + ' Loss:' + str(test_loss) + '\n'
     
-    all_data_file = open(all_data_filename, "a", encoding='utf-8')
-    all_data_file.write(script)
-    all_data_file.close()
+#     all_data_file = open(all_data_filename, "a", encoding='utf-8')
+#     all_data_file.write(script)
+#     all_data_file.close()
 
-    if a == 0:
-        end_results.append([test_acc, test_loss])
+#     if a == 0:
+#         end_results.append([test_acc, test_loss])
 
-    acc = float(test_acc)
-    loss = float(test_loss)
-    prev_acc = float(end_results[0][0])
-    prev_loss = float(end_results[0][1])
+#     acc = float(test_acc)
+#     loss = float(test_loss)
+#     prev_acc = float(end_results[0][0])
+#     prev_loss = float(end_results[0][1])
 
-    if acc > prev_acc or loss < prev_loss:
-        final_params.append([inputs[a], acc, loss])
+#     if acc > prev_acc or loss < prev_loss:
+#         final_params.append([inputs[a], acc, loss])
 
-print(end_results)
-print(final_params[-1])
+# print(end_results)
+# print(final_params[-1])
 
 logging.debug('End Program') #signifies the end of the program through the terminal
 

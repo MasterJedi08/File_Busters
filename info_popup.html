@@ -30,21 +30,21 @@
     <script type='text/javascript' charset='utf-8'>
         
     </script>
-    <!-- <form>
-        <label for="myInput">Enter your email address: </label>
-        <input type="text" id="myInput" /><br /><br />
-        <input type="button" value="Submit" onclick="input_email(myInput.value);" />
-        <input type="button" value="Search for Spam" onclick="input_email(myInput.value);"/> 
-      </form> -->
-    <!--get user input -- user email-->
+
+
+    <script type="text/javascript">
+
+    var myLink = document.getElementById('mylink');
     
-
-    <!-- <script src="content.js" charset="utf-8"> -->
-
-    <!-- <script type="text/javascript" charset="utf-8">
-        function checkPswd(){
-            alert("hello");
-        }
-    </script> -->
+    myLink.onclick = function(){
+    
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "content.js."; 
+        document.getElementsByTagName("head")[0].appendChild(script);
+        return false;
+    
+    }
+</script>
 </body>
 </html>

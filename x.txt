@@ -1,0 +1,68 @@
+-----------------------------------------------------------------------------------------------------
+Input variables Run 0: Epochs:7 BatchSize:200 Neurons: 128 Accuracy:0.8366013 Loss:0.6922905439231316
+
+Input variables Run 11: Epochs:7 BatchSize:200 Neurons: 304 Accuracy:0.8366013 Loss:0.6921957082392448
+
+Input variables Run 14: Epochs:7 BatchSize:200 Neurons: 352 Accuracy:0.8366013 Loss:0.6910377741837912
+
+Input variables Run 22: Epochs:7 BatchSize:200 Neurons: 480 Accuracy:0.8366013 Loss:0.6889528845352066
+
+Input variables Run 28: Epochs:7 BatchSize:210 Neurons: 176 Accuracy:0.8366013 Loss:0.6800342859353463
+
+Input variables Run 31: Epochs:7 BatchSize:210 Neurons: 224 Accuracy:0.8366013 Loss:0.6881175141925202
+
+Input variables Run 39: Epochs:7 BatchSize:210 Neurons: 352 Accuracy:0.8366013 Loss:0.688132574853592
+
+Input variables Run 46: Epochs:7 BatchSize:210 Neurons: 464 Accuracy:0.8366013 Loss:0.6909196693648854
+Input variables Run 47: Epochs:7 BatchSize:210 Neurons: 480 Accuracy:0.8366013 Loss:0.6914455300965595
+
+Input variables Run 51: Epochs:7 BatchSize:220 Neurons: 144 Accuracy:0.8366013 Loss:0.6883343965230758
+
+Input variables Run 54: Epochs:7 BatchSize:220 Neurons: 192 Accuracy:0.8366013 Loss:0.6938244246184777
+
+Input variables Run 92: Epochs:7 BatchSize:230 Neurons: 400 Accuracy:0.8366013 Loss:0.685872807817639
+
+Input variables Run 109: Epochs:7 BatchSize:240 Neurons: 272 Accuracy:0.8366013 Loss:0.6902072628665107
+
+Input variables Run 114: Epochs:7 BatchSize:240 Neurons: 352 Accuracy:0.8366013 Loss:0.6872310084432144
+
+Input variables Run 144: Epochs:7 BatchSize:250 Neurons: 432 Accuracy:0.8366013 Loss:0.6925715141554559
+
+Input variables Run 149: Epochs:7 BatchSize:250 Neurons: 512 Accuracy:0.8366013 Loss:0.6890816268517993
+Input variables Run 151: Epochs:7 BatchSize:260 Neurons: 144 Accuracy:0.8366013 Loss:0.6939053104195662
+
+Input variables Run 163: Epochs:7 BatchSize:260 Neurons: 336 Accuracy:0.8366013 Loss:0.6889245238237639
+Input variables Run 164: Epochs:7 BatchSize:260 Neurons: 352 Accuracy:0.8366013 Loss:0.6923943173210576
+
+Input variables Run 169: Epochs:7 BatchSize:260 Neurons: 432 Accuracy:0.8366013 Loss:0.685469169270513
+
+Input variables Run 175: Epochs:7 BatchSize:270 Neurons: 128 Accuracy:0.8366013 Loss:0.6855220370746422
+
+Input variables Run 177: Epochs:7 BatchSize:270 Neurons: 160 Accuracy:0.8366013 Loss:0.688277043261618
+
+Input variables Run 184: Epochs:7 BatchSize:270 Neurons: 272 Accuracy:0.8366013 Loss:0.6903213845891382
+
+Input variables Run 188: Epochs:7 BatchSize:270 Neurons: 336 Accuracy:0.8366013 Loss:0.6903979091296145
+
+Input variables Run 205: Epochs:7 BatchSize:280 Neurons: 208 Accuracy:0.8366013 Loss:0.6867233145129397
+
+Input variables Run 207: Epochs:7 BatchSize:280 Neurons: 240 Accuracy:0.8366013 Loss:0.6928641189308417
+
+Input variables Run 210: Epochs:7 BatchSize:280 Neurons: 288 Accuracy:0.8366013 Loss:0.6926072367495254
+
+Input variables Run 212: Epochs:7 BatchSize:280 Neurons: 320 Accuracy:0.8366013 Loss:0.6853419382421573
+
+Input variables Run 216: Epochs:7 BatchSize:280 Neurons: 384 Accuracy:0.8366013 Loss:0.6885286149575732
+
+Input variables Run 227: Epochs:7 BatchSize:290 Neurons: 160 Accuracy:0.8366013 Loss:0.6926299936953287
+
+Input variables Run 231: Epochs:7 BatchSize:290 Neurons: 224 Accuracy:0.8366013 Loss:0.6883811786391874
+Input variables Run 232: Epochs:7 BatchSize:290 Neurons: 240 Accuracy:0.8366013 Loss:0.6895626830800426
+
+Input variables Run 236: Epochs:7 BatchSize:290 Neurons: 304 Accuracy:0.8366013 Loss:0.6896334207869632
+
+Input variables Run 245: Epochs:7 BatchSize:290 Neurons: 448 Accuracy:0.8366013 Loss:0.6856153812244156
+
+Input variables Run 256: Epochs:7 BatchSize:300 Neurons: 224 Accuracy:0.8366013 Loss:0.690118905606086
+
+Input variables Run 274: Epochs:7 BatchSize:300 Neurons: 512 Accuracy:0.8366013 Loss:0.6875937701347326
