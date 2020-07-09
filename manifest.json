@@ -5,14 +5,16 @@
   "description": "An extension for gmail that allows you to detect spam emails. Click on the icon to activate.",
   "permissions": [
     "identity",
-    "*://*.google.com/*"
+    "https://mail.google.com/*",
+    "alarms"
   ],
   "background": {
     "scripts": ["base64.js", "background.js"]
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  
+  "content_security_policy": "script-src 'self' 'unsafe-hashes' 'unsafe-inline' 'unsafe-eval'; object-src 'self'",
   "oauth2": {
-    "client_id": "<clientid>",
+    "client_id": "461394914356-9u4ojjklnc6slr6qgtfbbpcr219152ds.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/gmail.modify"
     ]

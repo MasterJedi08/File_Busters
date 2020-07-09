@@ -33,10 +33,31 @@ activation_string = 'sigmoid'
 vocab_size = 25000
 SHUFFLE_BUFFER_SIZE = 100
 FILENAME = "file_busters_model.h5" 
-embedding_dim = 64
+embedding_dim = 16
 
-activation_string_list = ['elu', 'exponential', 'hard_sigmoid', 'linear', 'relu', 'selu',
-    'sigmoid', 'softmax', 'softplus', 'softsign']
+# ------------- PREPROCESS/CLEAN DATA -------------------
+def preprocess_input_email(email_in, tokenizer, model):
+    ret = ""
+    tokenizer = keras.preprocessing.text.Tokenizer(num_words = 25000, oov_token='<OOV>')
+    # fits tokenizer to data
+    tokenizer.fit_on_texts(email_in)
+    # creates sequence of words as numbers
+    train_sequences = tokenizer.texts_to_sequences(email_in)
+    padded_email = keras.preprocessing.sequence.pad_sequences(train_sequences)
+
+    padded_email = np.array(padded_email)
+
+    # print(train_sequences[:11])
+    predictions = model.predict(padded_email)
+    # print(predictions)
+    email_predicted_value = np.argmax(predictions[0])
+    # print(email_predicted_value)
+
+    if email_predicted_value == 1:
+        ret = "spam"
+    else:
+        ret = "not spam"
+    return ret
 
 # ------------- PREPROCESS/CLEAN DATA -------------------
 
@@ -110,6 +131,7 @@ def preprocess():
     # print(train_sequences[:11])
     train_padded = keras.preprocessing.sequence.pad_sequences(train_sequences)
    # print(train_padded[1000:1030])
+   
 
 
     # tokenizing test data
@@ -146,7 +168,7 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batc
         
         keras.layers.Embedding(vocab_size, embedding_dim, trainable=True),
         keras.layers.GlobalAveragePooling1D(),
-        tf.keras.layers.Dropout(0.2) ,
+        keras.layers.Dropout(0.2) ,
         # 128 neurons, rectified linear unit
         keras.layers.Dense(neurons, activation='relu'),
         keras.layers.Dense(2, activation=activation_string),
@@ -174,9 +196,9 @@ def train(train_emails, train_labels, test_emails, test_labels, NUM_EPOCHS, batc
     print(model.summary())
     # save model
     # model.save(FILENAME)
-    tfjs.converters.save_keras_model(model, tfjs_target_dir)
+    tfjs.converters.save_keras_model(model, 'file_busters_model_JS2.h5')
 
-
+ 
     return (history, model)
 
 
@@ -193,7 +215,7 @@ def predict(model, test_emails, test_labels):
 
     # use test data to predict output
     predictions = model.predict(test_emails[:10])
-    for i in range(5):
+    for i in range(10):
         #print prediction and actual
         print("Actual:", test_labels[i], "Expected:", np.argmax(predictions[i]))
 
@@ -255,6 +277,8 @@ history, model = train(train_emails, train_labels, test_emails, test_labels, 7, 
 
 # test model
 show_results(history, 7)
+
+predict(model, train_emails, train_labels)
 
 # end_results = []
 # final_params = []
