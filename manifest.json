@@ -3,6 +3,7 @@
   "version": "1.0",
   "manifest_version": 2,
   "description": "An extension for gmail that allows you to detect spam emails. Click on the icon to activate.",
+  "main": "dist/content.js"
   "permissions": [
     "identity",
     "https://mail.google.com/*",
@@ -10,6 +11,18 @@
   ],
   "background": {
     "scripts": ["base64.js", "background.js"]
+  },
+
+  "scripts": {
+    "lint": "eslint src test --fix",
+    "prebuild": "npm run lint && npm test",
+    "build": "npm run bundle && npm run minify",
+    "build-amd": "npm run bundle-amd && npm run minify-amd",
+    "bundle": "rollup -c",
+    "bundle-amd": "rollup -c rollup.config.amd.js",
+    "minify": "uglifyjs dist/content.development.js -o dist/content.js --comments --compress --mangle --source-map",
+    "minify-amd": "uglifyjs dist/amd/content.development.js -o dist/amd/content.js --comments --compress --mangle --source-map",
+    "test": "tead --coverage"
   },
   
   "content_security_policy": "script-src 'self' 'unsafe-hashes' 'unsafe-inline' 'unsafe-eval'; object-src 'self'",
