@@ -14,7 +14,7 @@ Github users:
 </ul>
 
 <h3>Available Browsers</h3>
-Chrome
+Chrome (coming soon)
 
 <h3>Files and What They Do</h3>
   <h5>Extension Files</h5>
@@ -29,5 +29,11 @@ Chrome
   files.py - wrote the original emails to text files after data cleaning (dependent on clean.py)<br></br>
   clean.py - cleans data (works with files.py)<br></br>
   email_files folder - contains the cleaned text files of ham and spam emails<br></br>
+
+<h3>DISCLAIMER</h3>
+<p>File Busters is NOT responsible for any actions taken or not taken due to our extension.
+  <br></br> Any scams, viruses, malicious code or plot, etc. that the user 
+becomes victim to is not the responsibility of File Busters. 
+<br></br> File Busters will not be held accountable for any harm that befalls the user.</p>
 
 <h3>Known Errors: </h3>
