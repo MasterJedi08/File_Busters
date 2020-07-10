@@ -37,3 +37,4 @@ becomes victim to is not the responsibility of File Busters.
 <br></br> File Busters will not be held accountable for any harm that befalls the user.</p>
 
 <h3>Known Errors: </h3>
+<p>More likely to detect as spam (even if not)</p>
